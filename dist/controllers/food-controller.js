@@ -7,7 +7,7 @@ exports["default"] = void 0;
 
 var _food = _interopRequireDefault(require("../models/food"));
 
-var _configuredFirebase = _interopRequireDefault(require("../configured-firebase"));
+var _configuratedFirebase = _interopRequireDefault(require("../configurated-firebase"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -25,9 +25,11 @@ var FoodController = /*#__PURE__*/function () {
 
     this.foods = [];
 
-    _configuredFirebase["default"].database().ref('/Food').once('value').then(function (snapshot) {
+    _configuratedFirebase["default"].database().ref('/Food').once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
-        _this.foods.push(new _food["default"](child.key, child.vendorID, child.name, child.price, child.description, child.picture));
+        var data = child.val();
+
+        _this.foods.push(new _food["default"](child.key, data.vendorID, data.name, data.price, data.description, data.picture));
       });
     });
   }
@@ -44,7 +46,7 @@ var FoodController = /*#__PURE__*/function () {
   }, {
     key: "create",
     value: function create(newItem) {
-      var ref = _configuredFirebase["default"].database().ref('/Food').push();
+      var ref = _configuratedFirebase["default"].database().ref('/Food').push();
 
       newItem.id = ref.key;
       ref.set(newItem.data);
@@ -63,7 +65,7 @@ var FoodController = /*#__PURE__*/function () {
       });
       if (index === -1) return false;
 
-      _configuredFirebase["default"].database().ref('/Food').child(id).set(item.data);
+      _configuratedFirebase["default"].database().ref('/Food').child(id).set(item.data);
 
       this.foods[index] = item;
       return true;
@@ -80,7 +82,7 @@ var FoodController = /*#__PURE__*/function () {
       });
       if (index === -1) return false;
 
-      _configuredFirebase["default"].database().ref('/Food').child(id).remove();
+      _configuratedFirebase["default"].database().ref('/Food').child(id).remove();
 
       this.foods.splice(index, 1);
       return true;

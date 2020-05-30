@@ -6,8 +6,9 @@ class FoodController {
         this.foods = []
         FirebaseAdmin.database().ref('/Food').once('value').then((snapshot) => {
             snapshot.forEach((child) => {
+                let data = child.val()
                 this.foods.push(
-                    new Food(child.key, child.vendorID, child.name, child.price, child.description, child.picture)
+                    new Food(child.key, data.vendorID, data.name, data.price, data.description, data.picture)
                 )
             })
         })
