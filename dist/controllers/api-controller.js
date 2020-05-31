@@ -22,7 +22,7 @@ var _default = {
       var price = req.body.price;
       var description = req.body.description;
       var picture = req.body.picture;
-      var newItem = new _food["default"]("", vendorID, name, price, description, picture);
+      var newItem = new _food["default"](vendorID, name, price, description, picture);
 
       _foodController["default"].create(newItem);
 
@@ -37,9 +37,9 @@ var _default = {
       var price = req.body.price;
       var description = req.body.description;
       var picture = req.body.picture;
-      var item = new _food["default"](id, vendorID, name, price, description, picture);
+      var item = new _food["default"](vendorID, name, price, description, picture);
 
-      var status = _foodController["default"].modify(item);
+      var status = _foodController["default"].modify(id, item);
 
       res.json({
         status: status === true ? 'ok' : 'failed'

@@ -9,24 +9,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Food =
 /**
- * @param {string} id 
  * @param {number} vendorID 
  * @param {string} name 
  * @param {number} price 
  * @param {string} description 
  * @param {string} picture 
  */
-function Food(id, vendorID, name, price, description, picture) {
+function Food(vendorID, name, price, description, picture) {
   _classCallCheck(this, Food);
 
-  this.id = id;
-  this.data = {
-    vendorID: vendorID,
-    name: name,
-    price: price,
-    description: description,
-    picture: picture
-  };
+  this.vendorID = vendorID;
+  this.name = name;
+  this.price = price;
+  this.description = description;
+  this.picture = picture;
 };
 
 exports["default"] = Food;

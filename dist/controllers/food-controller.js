@@ -23,13 +23,11 @@ var FoodController = /*#__PURE__*/function () {
 
     _classCallCheck(this, FoodController);
 
-    this.foods = [];
+    this.foods = {};
 
     _configuratedFirebase["default"].database().ref('/Food').once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
-        var data = child.val();
-
-        _this.foods.push(new _food["default"](child.key, data.vendorID, data.name, data.price, data.description, data.picture));
+        _this.foods[child.key] = child.val();
       });
     });
   }
@@ -48,26 +46,22 @@ var FoodController = /*#__PURE__*/function () {
     value: function create(newItem) {
       var ref = _configuratedFirebase["default"].database().ref('/Food').push();
 
-      newItem.id = ref.key;
-      ref.set(newItem.data);
-      this.foods.push(newItem);
+      ref.set(newItem);
+      this.foods[ref.key] = newItem;
     }
     /**
+     * @param {string} id
      * @param {Food} item 
      */
 
   }, {
     key: "modify",
-    value: function modify(item) {
-      var id = item.id;
-      var index = this.foods.findIndex(function (food) {
-        return id === food.id;
-      });
-      if (index === -1) return false;
+    value: function modify(id, item) {
+      if (id in this.foods === false) return false;
 
-      _configuratedFirebase["default"].database().ref('/Food').child(id).set(item.data);
+      _configuratedFirebase["default"].database().ref('/Food').child(id).set(item);
 
-      this.foods[index] = item;
+      this.foods[id] = item;
       return true;
     }
     /**
@@ -77,14 +71,11 @@ var FoodController = /*#__PURE__*/function () {
   }, {
     key: "remove",
     value: function remove(id) {
-      var index = this.foods.findIndex(function (food) {
-        return id === food.id;
-      });
-      if (index === -1) return false;
+      if (id in this.foods === false) return false;
 
       _configuratedFirebase["default"].database().ref('/Food').child(id).remove();
 
-      this.foods.splice(index, 1);
+      delete this.foods[id];
       return true;
     }
   }]);

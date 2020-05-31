@@ -3,13 +3,10 @@ import FirebaseAdmin from '../configurated-firebase'
 
 class FoodController {
     constructor() {
-        this.foods = []
+        this.foods = {}
         FirebaseAdmin.database().ref('/Food').once('value').then((snapshot) => {
             snapshot.forEach((child) => {
-                let data = child.val()
-                this.foods.push(
-                    new Food(child.key, data.vendorID, data.name, data.price, data.description, data.picture)
-                )
+                this.foods[child.key] = child.val()
             })
         })
     }
@@ -23,21 +20,19 @@ class FoodController {
      */
     create(newItem) {
         let ref = FirebaseAdmin.database().ref('/Food').push()
-        newItem.id = ref.key
-        ref.set(newItem.data)
-        this.foods.push(newItem)
+        ref.set(newItem)
+        this.foods[ref.key] = newItem
     }
 
     /**
+     * @param {string} id
      * @param {Food} item 
      */
-    modify(item) {
-        let id = item.id
-        let index = this.foods.findIndex((food) => { return id === food.id })
-        if (index === -1)
+    modify(id, item) {
+        if ((id in this.foods) === false)
             return false
-        FirebaseAdmin.database().ref('/Food').child(id).set(item.data)
-        this.foods[index] = item
+        FirebaseAdmin.database().ref('/Food').child(id).set(item)
+        this.foods[id] = item
         return true
     }
 
@@ -45,11 +40,10 @@ class FoodController {
      * @param {string} id 
      */
     remove(id) {
-        let index = this.foods.findIndex((food) => { return id === food.id })
-        if (index === -1)
+        if ((id in this.foods) === false)
             return false
         FirebaseAdmin.database().ref('/Food').child(id).remove()
-        this.foods.splice(index, 1)
+        delete this.foods[id]
         return true
     }
 }
