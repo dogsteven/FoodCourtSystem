@@ -14,6 +14,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var _default = {
   Food: {
     query: function query(req, res) {
+      console.log('test_1');
       res.json(_foodController["default"].query());
     },
     create: function create(req, res) {
