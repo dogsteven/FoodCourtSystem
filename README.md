@@ -10,3 +10,8 @@
 $ npm run build
 $ npm start
 ```
+7. Để xem dữ liệu của database thì vào đường dẫn:
+```
+http://localhost:5000/api/test/database/:ref
+```
+trong đó `:ref` thay bằng tên `ref`
