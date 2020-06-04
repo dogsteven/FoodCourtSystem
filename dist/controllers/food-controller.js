@@ -48,6 +48,7 @@ var FoodController = /*#__PURE__*/function () {
 
       ref.set(newItem);
       this.foods[ref.key] = newItem;
+      return ref.key;
     }
     /**
      * @param {string} id
@@ -57,7 +58,7 @@ var FoodController = /*#__PURE__*/function () {
   }, {
     key: "modify",
     value: function modify(id, item) {
-      if (id in this.foods === false) return false;
+      if (id in this.foods === false) return true;
 
       _configuratedFirebase["default"].database().ref('/Food').child(id).set(item);
 

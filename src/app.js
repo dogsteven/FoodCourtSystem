@@ -6,7 +6,9 @@ let app = express()
 
 app.use(express.json())
 app.use(express.static('static'))
-app.use(cors())
+app.use(cors({
+    origin: true
+}))
 app.use('/api', router)
 
 app.listen(process.env.PORT || 5000)

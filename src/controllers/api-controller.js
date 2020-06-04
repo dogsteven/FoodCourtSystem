@@ -1,7 +1,21 @@
 import Food from '../models/food'
 import FoodController from './food-controller'
+import FirebaseAdmin from '../configurated-firebase'
 
 export default {
+    Firebase: {
+        query(req, res) {
+            let ref = req.params.ref
+            if (ref === undefined)
+                res.json({
+                    status: 'failed'
+                })
+            FirebaseAdmin.database().ref('/' + ref).once('value', (snapshot) => {
+                res.json(snapshot.val())
+            })
+        }
+    },
+
     Food: {
         query(req, res) {
             res.json(FoodController.query())
@@ -14,9 +28,8 @@ export default {
             let description = req.body.description
             let picture = req.body.picture
             let newItem = new Food(vendorID, name, price, description, picture)
-            FoodController.create(newItem)
             res.json({
-                status: 'ok'
+                key: FoodController.create(newItem)
             })
         },
 

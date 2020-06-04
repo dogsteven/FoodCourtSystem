@@ -3,6 +3,9 @@ import APIController from './controllers/api-controller'
 
 let router = Router()
 
+router.route('/test/:ref')
+    .get(APIController.Firebase.query)
+
 router.route('/food')
     .get(APIController.Food.query)
     .post(APIController.Food.create)

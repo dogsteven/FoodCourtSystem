@@ -22,6 +22,7 @@ class FoodController {
         let ref = FirebaseAdmin.database().ref('/Food').push()
         ref.set(newItem)
         this.foods[ref.key] = newItem
+        return ref.key
     }
 
     /**
@@ -30,7 +31,7 @@ class FoodController {
      */
     modify(id, item) {
         if ((id in this.foods) === false)
-            return false
+            return true
         FirebaseAdmin.database().ref('/Food').child(id).set(item)
         this.foods[id] = item
         return true

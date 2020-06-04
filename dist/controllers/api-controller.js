@@ -9,12 +9,25 @@ var _food = _interopRequireDefault(require("../models/food"));
 
 var _foodController = _interopRequireDefault(require("./food-controller"));
 
+var _configuratedFirebase = _interopRequireDefault(require("../configurated-firebase"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var _default = {
+  Firebase: {
+    query: function query(req, res) {
+      var ref = req.params.ref;
+      if (ref === undefined) res.json({
+        status: 'failed'
+      });
+
+      _configuratedFirebase["default"].database().ref('/' + ref).once('value', function (snapshot) {
+        res.json(snapshot.val());
+      });
+    }
+  },
   Food: {
     query: function query(req, res) {
-      console.log('test_1');
       res.json(_foodController["default"].query());
     },
     create: function create(req, res) {
@@ -24,11 +37,8 @@ var _default = {
       var description = req.body.description;
       var picture = req.body.picture;
       var newItem = new _food["default"](vendorID, name, price, description, picture);
-
-      _foodController["default"].create(newItem);
-
       res.json({
-        status: 'ok'
+        key: _foodController["default"].create(newItem)
       });
     },
     modify: function modify(req, res) {
