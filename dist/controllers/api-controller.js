@@ -34,10 +34,11 @@ var _default = {
       var vendorID = req.body.vendorID;
       var name = req.body.name;
       var price = req.body.price;
+      var quantity = req.body.quantity;
       var categories = req.body.categories;
       var description = req.body.description;
       var picture = req.body.picture;
-      var newItem = new _food["default"](vendorID, name, price, categories, description, picture);
+      var newItem = new _food["default"](vendorID, name, price, quantity, categories, description, picture);
       res.json({
         key: _foodController["default"].create(newItem)
       });
@@ -47,10 +48,11 @@ var _default = {
       var vendorID = req.body.vendorID;
       var name = req.body.name;
       var price = req.body.price;
+      var quantity = req.body.quantity;
       var categories = req.body.categories;
       var description = req.body.description;
       var picture = req.body.picture;
-      var item = new _food["default"](vendorID, name, price, categories, description, picture);
+      var item = new _food["default"](vendorID, name, price, quantity, categories, description, picture);
 
       var status = _foodController["default"].modify(id, item);
 

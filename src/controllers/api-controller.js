@@ -25,10 +25,11 @@ export default {
       let vendorID = req.body.vendorID
       let name = req.body.name
       let price = req.body.price
+      let quantity = req.body.quantity
       let categories = req.body.categories
       let description = req.body.description
       let picture = req.body.picture
-      let newItem = new Food(vendorID, name, price, categories, description, picture)
+      let newItem = new Food(vendorID, name, price, quantity, categories, description, picture)
       res.json({
         key: FoodController.create(newItem)
       })
@@ -39,10 +40,11 @@ export default {
       let vendorID = req.body.vendorID
       let name = req.body.name
       let price = req.body.price
+      let quantity = req.body.quantity
       let categories = req.body.categories
       let description = req.body.description
       let picture = req.body.picture
-      let item = new Food(vendorID, name, price, categories, description, picture)
+      let item = new Food(vendorID, name, price, quantity, categories, description, picture)
       let status = FoodController.modify(id, item)
       res.json({
         status: status === true ? 'ok' : 'failed'

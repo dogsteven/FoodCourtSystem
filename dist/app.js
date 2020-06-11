@@ -15,4 +15,4 @@ app.use((0, _cors["default"])({
   origin: true
 }));
 app.use('/api', _router["default"]);
-app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT || 80, '0.0.0.0');

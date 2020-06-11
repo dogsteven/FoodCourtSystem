@@ -11,4 +11,4 @@ app.use(cors({
 }))
 app.use('/api', router)
 
-app.listen(process.env.PORT || 5000)
+app.listen(process.env.PORT || 80, '0.0.0.0')
