@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import APIController from './controllers/api-controller'
+import APIController from './controllers/api'
 import notifications from './notifications'
 
 let router = Router()
@@ -11,15 +11,12 @@ router.route('/food')
     .get(APIController.Food.query)
     .post(APIController.Food.create)
     .put(APIController.Food.modify)
+router.get('/food/:id', APIController.Food.queryByID)
 router.delete('/food/:id', APIController.Food.remove)
-
-router.route('/vendor-owner/:username/:password')
-    .get(APIController.VendorOwner.query)
-router.route('/vendor-owner')
-    .post(APIController.VendorOwner.create)
 
 router.route('/api/notifications')
     .post((req, res) => {
+        console.log("Hello")
         res.status(201).json({});
         let data = JSON.stringify({
             title: 'Hello',

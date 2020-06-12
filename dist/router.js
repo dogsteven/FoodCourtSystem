@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -7,19 +9,17 @@ exports["default"] = void 0;
 
 var _express = require("express");
 
-var _apiController = _interopRequireDefault(require("./controllers/api-controller"));
+var _api = _interopRequireDefault(require("./controllers/api"));
 
 var _notifications = _interopRequireDefault(require("./notifications"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 var router = (0, _express.Router)();
-router.route('/test/database/:ref').get(_apiController["default"].Firebase.query);
-router.route('/food').get(_apiController["default"].Food.query).post(_apiController["default"].Food.create).put(_apiController["default"].Food.modify);
-router["delete"]('/food/:id', _apiController["default"].Food.remove);
-router.route('/vendor-owner/:username/:password').get(_apiController["default"].VendorOwner.query);
-router.route('/vendor-owner').post(_apiController["default"].VendorOwner.create);
+router.route('/test/database/:ref').get(_api["default"].Firebase.query);
+router.route('/food').get(_api["default"].Food.query).post(_api["default"].Food.create).put(_api["default"].Food.modify);
+router.get('/food/:id', _api["default"].Food.queryByID);
+router["delete"]('/food/:id', _api["default"].Food.remove);
 router.route('/api/notifications').post(function (req, res) {
+  console.log("Hello");
   res.status(201).json({});
   var data = JSON.stringify({
     title: 'Hello',
