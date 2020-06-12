@@ -112,9 +112,6 @@ var FoodItemDAO = /*#__PURE__*/function () {
     value: function create(item) {
       var ref = _configuratedFirebase["default"].database().ref('/Food').push();
 
-      item.id = ref.key;
-      this.foods.push(item);
-
       var data = _objectSpread({}, item);
 
       delete data.id;
@@ -127,46 +124,93 @@ var FoodItemDAO = /*#__PURE__*/function () {
 
   }, {
     key: "modify",
-    value: function modify(item) {
-      var index = this.foods.findIndex(function (val) {
-        return val.id === item.id;
-      });
+    value: function () {
+      var _modify = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(item) {
+        var checker, data;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return this.queryByID(item.id);
 
-      if (index >= 0) {
-        this.foods[index] = item;
+              case 2:
+                checker = _context3.sent;
 
-        var data = _objectSpread({}, item);
+                if (!(checker !== null)) {
+                  _context3.next = 8;
+                  break;
+                }
 
-        delete data.id;
+                data = _objectSpread({}, item);
+                delete data.id;
 
-        _configuratedFirebase["default"].database().ref('/Food').child(item.id).set(data);
+                _configuratedFirebase["default"].database().ref('/Food').child(item.id).set(data);
 
-        return true;
+                return _context3.abrupt("return", true);
+
+              case 8:
+                return _context3.abrupt("return", false);
+
+              case 9:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function modify(_x2) {
+        return _modify.apply(this, arguments);
       }
 
-      return false;
-    }
+      return modify;
+    }()
     /**
      * @param {string} id 
      */
 
   }, {
     key: "remove",
-    value: function remove(id) {
-      var index = this.foods.findIndex(function (val) {
-        return val.id === id;
-      });
+    value: function () {
+      var _remove = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(id) {
+        var checker;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return this.queryByID(id);
 
-      if (index >= 0) {
-        this.foods.splice(index, 1);
+              case 2:
+                checker = _context4.sent;
 
-        _configuratedFirebase["default"].database().ref('/Food').child(id).remove();
+                if (!(checker !== null)) {
+                  _context4.next = 6;
+                  break;
+                }
 
-        return true;
+                _configuratedFirebase["default"].database().ref('/Food').child(id).remove();
+
+                return _context4.abrupt("return", true);
+
+              case 6:
+                return _context4.abrupt("return", false);
+
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function remove(_x3) {
+        return _remove.apply(this, arguments);
       }
 
-      return false;
-    }
+      return remove;
+    }()
   }]);
   return FoodItemDAO;
 }();

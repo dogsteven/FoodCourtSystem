@@ -31,8 +31,6 @@ class FoodItemDAO {
    */
   create(item) {
     let ref = FirebaseAdmin.database().ref('/Food').push()
-    item.id = ref.key
-    this.foods.push(item)
     let data = { ...item }
     delete data.id
     ref.set(data)
@@ -42,11 +40,10 @@ class FoodItemDAO {
   /**
    * @param {FoodItem} item 
    */
-  modify(item) {
-    let index = this.foods.findIndex((val) => val.id === item.id)
-    if (index >= 0) {
-      this.foods[index] = item
-      let data = { ...item }
+  async modify(item) {
+    let checker = await this.queryByID(item.id)
+    if (checker !== null) {
+      var data = { ...item }
       delete data.id
       FirebaseAdmin.database().ref('/Food').child(item.id).set(data)
       return true
@@ -57,10 +54,9 @@ class FoodItemDAO {
   /**
    * @param {string} id 
    */
-  remove(id) {
-    let index = this.foods.findIndex((val) => val.id === id)
-    if (index >= 0) {
-      this.foods.splice(index, 1)
+  async remove(id) {
+    let checker = await this.queryByID(id)
+    if (checker !== null) {
       FirebaseAdmin.database().ref('/Food').child(id).remove()
       return true
     }

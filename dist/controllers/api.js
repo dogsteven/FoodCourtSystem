@@ -85,46 +85,94 @@ var _default = {
       }))();
     },
     create: function create(req, res) {
-      var vendorID = req.body.vendorID;
-      var name = req.body.name;
-      var price = req.body.price;
-      var quantity = req.body.quantity;
-      var categories = req.body.categories;
-      var description = req.body.description;
-      var photo = req.body.photo;
-      var item = new _foodItem["default"]("", vendorID, name, price, quantity, categories, description, photo);
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+        var vendorID, name, price, quantity, categories, description, photo, item, id;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                vendorID = req.body.vendorID;
+                name = req.body.name;
+                price = req.body.price;
+                quantity = req.body.quantity;
+                categories = req.body.categories;
+                description = req.body.description;
+                photo = req.body.photo;
+                item = new _foodItem["default"]("", vendorID, name, price, quantity, categories, description, photo);
+                _context3.next = 10;
+                return _foodItemDataAccessObject["default"].create(item);
 
-      var id = _foodItemDataAccessObject["default"].create(item);
+              case 10:
+                id = _context3.sent;
+                res.json({
+                  key: id
+                });
 
-      res.json({
-        id: id
-      });
+              case 12:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     },
     modify: function modify(req, res) {
-      var id = req.body.id;
-      var vendorID = req.body.vendorID;
-      var name = req.body.name;
-      var price = req.body.price;
-      var quantity = req.body.quantity;
-      var categories = req.body.categories;
-      var description = req.body.description;
-      var photo = req.body.photo;
-      var item = new _foodItem["default"](id, vendorID, name, price, quantity, categories, description, photo);
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+        var id, vendorID, name, price, quantity, categories, description, photo, item, status;
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                id = req.body.id;
+                vendorID = req.body.vendorID;
+                name = req.body.name;
+                price = req.body.price;
+                quantity = req.body.quantity;
+                categories = req.body.categories;
+                description = req.body.description;
+                photo = req.body.photo;
+                item = new _foodItem["default"](id, vendorID, name, price, quantity, categories, description, photo);
+                _context4.next = 11;
+                return _foodItemDataAccessObject["default"].modify(item);
 
-      var status = _foodItemDataAccessObject["default"].modify(item);
+              case 11:
+                status = _context4.sent;
+                res.json({
+                  status: status
+                });
 
-      res.json({
-        status: status
-      });
+              case 13:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     },
     remove: function remove(req, res) {
-      var id = req.params.id;
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
+        var id, status;
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                id = req.params.id;
+                _context5.next = 3;
+                return _foodItemDataAccessObject["default"].remove(id);
 
-      var status = _foodItemDataAccessObject["default"].remove(id);
+              case 3:
+                status = _context5.sent;
+                res.json({
+                  status: status
+                });
 
-      res.json({
-        status: status
-      });
+              case 5:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
     }
   }
 };

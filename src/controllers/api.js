@@ -29,7 +29,7 @@ export default {
       })
     },
 
-    create(req, res) {
+    async create(req, res) {
       let vendorID = req.body.vendorID
       let name = req.body.name
       let price = req.body.price
@@ -38,13 +38,13 @@ export default {
       let description = req.body.description
       let photo = req.body.photo
       let item = new FoodItem("", vendorID, name, price, quantity, categories, description, photo)
-      let id = FoodItemDAO.create(item)
+      let id = await FoodItemDAO.create(item)
       res.json({
-        id: id
+        key: id
       })
     },
 
-    modify(req, res) {
+    async modify(req, res) {
       let id = req.body.id
       let vendorID = req.body.vendorID
       let name = req.body.name
@@ -54,15 +54,15 @@ export default {
       let description = req.body.description
       let photo = req.body.photo
       let item = new FoodItem(id, vendorID, name, price, quantity, categories, description, photo)
-      let status = FoodItemDAO.modify(item)
+      let status = await FoodItemDAO.modify(item)
       res.json({
         status: status
       })
     },
 
-    remove(req, res) {
+    async remove(req, res) {
       let id = req.params.id
-      let status = FoodItemDAO.remove(id)
+      let status = await FoodItemDAO.remove(id)
       res.json({
         status: status
       })
