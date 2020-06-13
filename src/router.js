@@ -13,4 +13,11 @@ router.route('/food')
 router.get('/food/:id', APIController.Food.queryByID)
 router.delete('/food/:id', APIController.Food.remove)
 
+router.route('/order')
+    .get(APIController.Order.query)
+    .post(APIController.Order.create)
+    .put(APIController.Order.modify)
+router.get('/order/:id', APIController.Food.queryByID)
+router.delete('/food/:id', APIController.Food.remove)
+
 export default router
