@@ -14,18 +14,4 @@ router.route('/food')
 router.get('/food/:id', APIController.Food.queryByID)
 router.delete('/food/:id', APIController.Food.remove)
 
-router.route('/api/notifications')
-    .post((req, res) => {
-        console.log("Hello")
-        res.status(201).json({});
-        let data = JSON.stringify({
-            title: 'Hello',
-            content: 'This is push notifications'
-        })
-        notifications.sendNotification(req.body, data)
-            .catch((error) => {
-                console.log(error)
-            })
-    })
-
 export default router
