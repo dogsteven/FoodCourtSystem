@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import APIController from './controllers/api'
-import notifications from './notifications'
 
 let router = Router()
 
