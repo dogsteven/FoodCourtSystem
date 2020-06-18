@@ -1,6 +1,10 @@
 import express from 'express'
 let router = express.Router()
 
+router.get('/', (req, res) => {
+    res.end('hello')
+})
+
 /* food-item */
 import FoodItem from './food-item/model'
 import FoodItemDataAccessObject from './food-item/data-access-object'

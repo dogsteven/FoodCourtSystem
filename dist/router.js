@@ -17,8 +17,6 @@ var _model = _interopRequireDefault(require("./food-item/model"));
 
 var _dataAccessObject = _interopRequireDefault(require("./food-item/data-access-object"));
 
-var _routine = _interopRequireDefault(require("./food-item/routine"));
-
 var _model2 = _interopRequireDefault(require("./vendor-owner/model"));
 
 var _dataAccessObject2 = _interopRequireDefault(require("./vendor-owner/data-access-object"));
