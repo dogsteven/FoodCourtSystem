@@ -1,5 +1,5 @@
 import FirebaseAdmin from 'firebase-admin'
-import configuration from '../configuration.json'
+import configuration from '../configuration'
 import Customer from './model'
 
 let database = FirebaseAdmin.database().ref(configuration.database.customer)

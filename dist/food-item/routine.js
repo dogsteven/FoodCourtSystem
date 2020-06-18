@@ -9,7 +9,7 @@ exports["default"] = void 0;
 
 var _firebase = _interopRequireDefault(require("../firebase"));
 
-var _configuration = _interopRequireDefault(require("../configuration.json"));
+var _configuration = _interopRequireDefault(require("../configuration"));
 
 var _model = _interopRequireDefault(require("./model"));
 
