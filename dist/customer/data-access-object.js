@@ -15,7 +15,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _firebaseAdmin = _interopRequireDefault(require("firebase-admin"));
 
-var _configuration = _interopRequireDefault(require("../configuration.json"));
+var _configuration = _interopRequireDefault(require("../configuration"));
 
 var _model = _interopRequireDefault(require("./model"));
 

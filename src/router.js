@@ -4,7 +4,6 @@ let router = express.Router()
 /* food-item */
 import FoodItem from './food-item/model'
 import FoodItemDataAccessObject from './food-item/data-access-object'
-import FoodItemRoutine from './food-item/routine'
 router.get('/food-item', async (req, res) => {
     res.json(await FoodItemDataAccessObject.query())
 })
