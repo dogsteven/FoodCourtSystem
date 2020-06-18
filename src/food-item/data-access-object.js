@@ -1,5 +1,5 @@
 import FirebaseAdmin from '../firebase'
-import configuration from '../configuration'
+import configuration from '../configuration.json'
 import FoodItem from './model'
 
 let database = FirebaseAdmin.database().ref(configuration.database["food-item"])
