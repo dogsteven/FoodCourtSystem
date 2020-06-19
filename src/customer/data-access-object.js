@@ -8,7 +8,7 @@ export default {
 
     /**
      * @param {string} username 
-     * @param {string} password 
+     * @param {string} password
      */
     async queryByUsernamePassword(username, password) {
         let info = null

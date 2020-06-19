@@ -9,7 +9,7 @@ export default {
      * @param {string} username 
      * @param {string} password 
      */
-    async query(username, password) {
+    async queryByUsernamePassword(username, password) {
         var vendorID = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
@@ -27,6 +27,8 @@ export default {
      * @param {VendorOwner} info 
      */
     async create(info) {
+        if ('id' in info)
+            delete info.id
         var unvalid = false
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
@@ -46,6 +48,8 @@ export default {
      * @param {VendorOwner} newInfo 
      */
     async modify(username, password, newInfo) {
+        if ('id' in newInfo)
+            delete newInfo.id
         let snapshot = await database.once('value')
         var valid = false
         snapshot.forEach((child) => {
