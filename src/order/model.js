@@ -1,14 +1,13 @@
+import OrderItem from './order-item/model'
 import CartItem from './cart-item/model'
 
 export default class {
-    /**
-     * @param {string} id
-     * @param {string} customerID 
-     * @param {CartItem[]} items 
+    /** 
+     * @param {CartItem[]} cartItems 
      */
-    constructor(id, customerID, items) {
-        this.id = id
-        this.customerID = customerID
-        this.items = items
+    constructor(cartItems) {
+        for (let cart in cartItems) {
+            
+        }
     }
 }

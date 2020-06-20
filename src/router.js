@@ -8,7 +8,8 @@ import FoodItemDataAccessObject from './food-item/data-access-object'
  * get: /api/food-item
  * data trả về ở dạng: 
  * {
- *   food-item-id-1: {
+ *   {
+ *     id
  *     vendorID,
  *     name,
  *     price,
@@ -16,17 +17,7 @@ import FoodItemDataAccessObject from './food-item/data-access-object'
  *     categories,
  *     description,
  *     photo
- *   },
- *   food-item-id-2: {
- *     vendorID,
- *     name,
- *     price,
- *     quantity
- *     categories,
- *     description,
- *     photo
- *   },
- *   ...
+ *   }[]
  * }
  */
 router.get('/food-item', async (req, res) => {

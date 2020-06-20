@@ -6,10 +6,11 @@ let database = FirebaseAdmin.database().ref(configuration.database["food-item"])
 
 export default {
     async query() {
-        let foods = {}
+        let foods = []
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            foods[child.key] = { ...child.val() }
+            let data = Object.assign({ id: child.key }, { ...child.val() })
+            foods.push(data)
         })
         return foods
     },
@@ -56,12 +57,5 @@ export default {
         if (valid === true)
             database.child(id).remove()
         return valid
-    },
-    /**
-     * @param {string} id
-     */
-    async checkAvailable(id) {
-        let available = (await database.child(item.id).once('value')).exists()
-        return available
     }
 }
