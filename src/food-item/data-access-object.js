@@ -56,5 +56,12 @@ export default {
         if (valid === true)
             database.child(id).remove()
         return valid
+    },
+    /**
+     * @param {string} id
+     */
+    async checkAvailable(id) {
+        let available = (await database.child(item.id).once('value')).exists()
+        return available
     }
 }
