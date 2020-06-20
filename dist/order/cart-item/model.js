@@ -9,18 +9,17 @@ exports["default"] = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _model = _interopRequireDefault(require("./order-item/model"));
-
-var _model2 = _interopRequireDefault(require("./cart-item/model"));
-
 var _default =
 /** 
- * @param {CartItem[]} cartItems 
+ * @param {string} vendorID
+ * @param {string} foodItemID 
+ * @param {number} quantity 
  */
-function _default(cartItems) {
+function _default(vendorID, foodItemID, quantity) {
   (0, _classCallCheck2["default"])(this, _default);
-
-  for (var cart in cartItems) {}
+  this.vendorID = vendorID;
+  this.foodItemID = foodItemID;
+  this.quantity = quantity;
 };
 
 exports["default"] = _default;

@@ -28,7 +28,7 @@ var database = _firebaseAdmin["default"].database().ref(_configuration["default"
 var _default = {
   /**
    * @param {string} username 
-   * @param {string} password 
+   * @param {string} password
    */
   queryByUsernamePassword: function queryByUsernamePassword(username, password) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {

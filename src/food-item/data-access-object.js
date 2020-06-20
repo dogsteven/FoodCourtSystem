@@ -20,7 +20,8 @@ export default {
      * @returns {FoodItem?}
      */
     async queryByID(id) {
-        return (await database.child(id).once('value')).val()
+        let item = (await database.child(id).once('value')).val()
+        return { id: id, ...item}
     },
 
     /**

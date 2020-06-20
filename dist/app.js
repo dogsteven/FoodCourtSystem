@@ -15,4 +15,4 @@ app.use((0, _cors["default"])({
 }));
 app.use(_express["default"]["static"]('static'));
 app.use('/api', _router["default"]);
-app.listen(process.env.PORT || 8000);
+app.listen(process.env.PORT || 80);

@@ -1,6 +1,14 @@
 import express from 'express'
 let router = express.Router()
 
+import FirebaseAdmin from './firebase'
+
+/* database */
+router.get('/test/database/:ref', async (req, res) => {
+    res.json((await FirebaseAdmin.database().ref('/' + req.params.ref).once('value')).val())
+})
+/* end database */
+
 /* food-item */
 import FoodItem from './food-item/model'
 import FoodItemDataAccessObject from './food-item/data-access-object'

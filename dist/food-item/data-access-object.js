@@ -33,14 +33,17 @@ var _default = {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              foods = {};
+              foods = [];
               _context.next = 3;
               return database.once('value');
 
             case 3:
               snapshot = _context.sent;
               snapshot.forEach(function (child) {
-                foods[child.key] = _objectSpread({}, child.val());
+                var data = Object.assign({
+                  id: child.key
+                }, _objectSpread({}, child.val()));
+                foods.push(data);
               });
               return _context.abrupt("return", foods);
 
@@ -59,6 +62,7 @@ var _default = {
    */
   queryByID: function queryByID(id) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+      var item;
       return _regenerator["default"].wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -67,9 +71,12 @@ var _default = {
               return database.child(id).once('value');
 
             case 2:
-              return _context2.abrupt("return", _context2.sent.val());
+              item = _context2.sent.val();
+              return _context2.abrupt("return", _objectSpread({
+                id: id
+              }, item));
 
-            case 3:
+            case 4:
             case "end":
               return _context2.stop();
           }

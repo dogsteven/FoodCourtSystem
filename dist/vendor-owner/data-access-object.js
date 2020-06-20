@@ -30,7 +30,7 @@ var _default = {
    * @param {string} username 
    * @param {string} password 
    */
-  query: function query(username, password) {
+  queryByUsernamePassword: function queryByUsernamePassword(username, password) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
       var vendorID, snapshot;
       return _regenerator["default"].wrap(function _callee$(_context) {
@@ -74,11 +74,12 @@ var _default = {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              if ('id' in info) delete info.id;
               unvalid = false;
-              _context2.next = 3;
+              _context2.next = 4;
               return database.once('value');
 
-            case 3:
+            case 4:
               snapshot = _context2.sent;
               snapshot.forEach(function (child) {
                 var data = child.val();
@@ -87,20 +88,20 @@ var _default = {
               });
 
               if (!(unvalid === false)) {
-                _context2.next = 9;
+                _context2.next = 10;
                 break;
               }
 
-              _context2.next = 8;
+              _context2.next = 9;
               return database.push();
 
-            case 8:
+            case 9:
               _context2.sent.set(info);
 
-            case 9:
+            case 10:
               return _context2.abrupt("return", !unvalid);
 
-            case 10:
+            case 11:
             case "end":
               return _context2.stop();
           }
@@ -121,10 +122,11 @@ var _default = {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.next = 2;
+              if ('id' in newInfo) delete newInfo.id;
+              _context3.next = 3;
               return database.once('value');
 
-            case 2:
+            case 3:
               snapshot = _context3.sent;
               valid = false;
               snapshot.forEach(function (child) {
@@ -144,7 +146,7 @@ var _default = {
               });
               return _context3.abrupt("return", valid);
 
-            case 6:
+            case 7:
             case "end":
               return _context3.stop();
           }
