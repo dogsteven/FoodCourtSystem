@@ -578,5 +578,36 @@ router.post('/order-customer', /*#__PURE__*/function () {
 
 /* end order for cooks */
 
+/* categories */
+
+router.get('/categories', /*#__PURE__*/function () {
+  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(req, res) {
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            _context11.t0 = res;
+            _context11.next = 3;
+            return _firebase["default"].database().ref('/FoodCourt/Categories').once('value');
+
+          case 3:
+            _context11.t1 = _context11.sent.val();
+
+            _context11.t0.json.call(_context11.t0, _context11.t1);
+
+          case 5:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11);
+  }));
+
+  return function (_x21, _x22) {
+    return _ref11.apply(this, arguments);
+  };
+}());
+/* end categories */
+
 var _default = router;
 exports["default"] = _default;

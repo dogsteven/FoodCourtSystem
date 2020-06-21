@@ -300,4 +300,12 @@ router.post('/order-customer', async (req, res) => {
 
 /* end order for cooks */
 
+/* categories */
+
+router.get('/categories', async (req, res) => {
+    res.json((await FirebaseAdmin.database().ref('/FoodCourt/Categories').once('value')).val())
+})
+
+/* end categories */
+
 export default router
