@@ -40,9 +40,10 @@ var _default = {
             case 3:
               snapshot = _context.sent;
               snapshot.forEach(function (child) {
-                var data = Object.assign({
+                var data = _objectSpread({
                   id: child.key
-                }, _objectSpread({}, child.val()));
+                }, child.val());
+
                 foods.push(data);
               });
               return _context.abrupt("return", foods);

@@ -27,36 +27,37 @@ var database = _firebaseAdmin["default"].database().ref(_configuration["default"
 
 var _default = {
   /**
+   * 
    * @param {string} username 
-   * @param {string} password
+   * @param {string} password 
    */
   queryByUsernamePassword: function queryByUsernamePassword(username, password) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-      var info, snapshot;
+      var customer, snapshot;
       return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              info = null;
+              customer = null;
               _context.next = 3;
               return database.once('value');
 
             case 3:
               snapshot = _context.sent;
               snapshot.forEach(function (child) {
-                var data = _objectSpread({}, child.val());
+                var info = child.val();
 
-                if (data.username === username && data.password === password) {
-                  delete data.password;
-                  info = {
-                    id: child.key,
-                    info: data
-                  };
+                if (info.username === username && info.password === password) {
+                  customer = _objectSpread({
+                    id: child.key
+                  }, info);
+                  if ('registrationTokens' in customer === false) customer.registrationTokens = [];
+                  return true;
                 }
 
-                return info !== null;
+                return false;
               });
-              return _context.abrupt("return", info);
+              return _context.abrupt("return", customer);
 
             case 6:
             case "end":
@@ -68,11 +69,12 @@ var _default = {
   },
 
   /**
+   * 
    * @param {string} id 
    */
   queryByID: function queryByID(id) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-      var data, info;
+      var customer;
       return _regenerator["default"].wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -81,15 +83,11 @@ var _default = {
               return database.child(id).once('value');
 
             case 2:
-              data = _context2.sent;
-              info = data.val();
-              if ('password' in info) delete info.password;
-              return _context2.abrupt("return", {
-                id: data.key,
-                info: info
-              });
+              customer = _context2.sent.val();
+              if (customer !== null && 'registrationTokens' in customer === false) customer.registrationTokens = [];
+              return _context2.abrupt("return", customer);
 
-            case 6:
+            case 5:
             case "end":
               return _context2.stop();
           }
@@ -99,45 +97,32 @@ var _default = {
   },
 
   /**
+   * 
    * @param {Customer} customer 
    */
   create: function create(customer) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-      var unvalid, snapshot, data, ref;
+      var id;
       return _regenerator["default"].wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              unvalid = false;
-              _context3.next = 3;
+              _context3.next = 2;
               return database.once('value');
 
-            case 3:
-              snapshot = _context3.sent;
-              snapshot.forEach(function (child) {
-                if (child.val().username === customer.username) unvalid = true;
-                return unvalid;
+            case 2:
+              _context3.t0 = _context3.sent;
+              id = null(_context3.t0).forEach(function (child) {
+                if (child.val().username === customer.username) {
+                  id = child.key;
+                  return true;
+                }
+
+                return false;
               });
+              return _context3.abrupt("return", id);
 
-              if (!(unvalid === false)) {
-                _context3.next = 13;
-                break;
-              }
-
-              data = _objectSpread({}, customer);
-              if ('id' in data) delete data.id;
-              _context3.next = 10;
-              return database.push();
-
-            case 10:
-              ref = _context3.sent;
-              ref.set(data);
-              return _context3.abrupt("return", ref.key);
-
-            case 13:
-              return _context3.abrupt("return", null);
-
-            case 14:
+            case 5:
             case "end":
               return _context3.stop();
           }
@@ -147,26 +132,42 @@ var _default = {
   },
 
   /**
+   * 
    * @param {Customer} customer 
    */
-  modify: function modify(customer) {
+  modify: function modify(username, password, customer) {
+    var _this = this;
+
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
-      var data, valid;
+      var info, data;
       return _regenerator["default"].wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              data = _objectSpread({}, customer);
-              if ('id' in data) delete data.id;
-              _context4.next = 4;
-              return database.child(customer.id).once('value');
+              _context4.next = 2;
+              return _this.queryByUsernamePassword(username, password);
 
-            case 4:
-              valid = _context4.sent.exists();
-              if (valid === true) database.child(customer.id).set(data);
-              return _context4.abrupt("return", valid);
+            case 2:
+              info = _context4.sent;
 
-            case 7:
+              if (!(info === null)) {
+                _context4.next = 5;
+                break;
+              }
+
+              return _context4.abrupt("return", false);
+
+            case 5:
+              info.password = customer.password;
+              info.firstname = customer.firstname;
+              info.lastname = customer.lastname;
+              info.email = customer.last;
+              data = _objectSpread({}, info);
+              delete data.id;
+              database.child(info.id).set(data);
+              return _context4.abrupt("return", true);
+
+            case 13:
             case "end":
               return _context4.stop();
           }
@@ -176,29 +177,86 @@ var _default = {
   },
 
   /**
+   * 
    * @param {string} id 
+   * @param {string} token 
    */
-  remove: function remove(id) {
+  setToken: function setToken(id, token) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
-      var valid;
+      var ref, registrationTokensRef, registrationTokens;
       return _regenerator["default"].wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.next = 2;
-              return database.child(id).once('value');
+              ref = database.child(id);
+              _context5.next = 3;
+              return ref.once('value');
 
-            case 2:
-              valid = _context5.sent.exists();
-              if (valid === true) database.child(id).remove();
-              return _context5.abrupt("return", valid);
+            case 3:
+              _context5.t0 = _context5.sent.exists();
 
-            case 5:
+              if (!(_context5.t0 === false)) {
+                _context5.next = 6;
+                break;
+              }
+
+              return _context5.abrupt("return", false);
+
+            case 6:
+              registrationTokensRef = ref.child('registrationTokens');
+              _context5.next = 9;
+              return registrationTokensRef.once('value');
+
+            case 9:
+              registrationTokens = _context5.sent.val();
+              registrationTokens.push(token);
+              registrationTokensRef.set(registrationTokens);
+              return _context5.abrupt("return", true);
+
+            case 13:
             case "end":
               return _context5.stop();
           }
         }
       }, _callee5);
+    }))();
+  },
+
+  /**
+   * 
+   * @param {string} id 
+   */
+  remove: function remove(id) {
+    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
+      var ref;
+      return _regenerator["default"].wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              ref = database.child(id);
+              _context6.next = 3;
+              return ref.once('value');
+
+            case 3:
+              _context6.t0 = _context6.sent.exists();
+
+              if (!(_context6.t0 === true)) {
+                _context6.next = 7;
+                break;
+              }
+
+              ref.remove();
+              return _context6.abrupt("return", true);
+
+            case 7:
+              return _context6.abrupt("return", false);
+
+            case 8:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
     }))();
   }
 };

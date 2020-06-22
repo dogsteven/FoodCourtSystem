@@ -26,6 +26,7 @@ function _default(id, username, password, firstname, lastname, email) {
   this.firstname = firstname;
   this.lastname = lastname;
   this.email = email;
+  this.registrationTokens = [];
 };
 
 exports["default"] = _default;

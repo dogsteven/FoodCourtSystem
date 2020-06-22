@@ -22,6 +22,14 @@ app.use('/api', _router["default"]);
 
 var server = _http["default"].createServer(app);
 
-_socket["default"].listen(server);
+var io = _socket["default"].listen(server);
 
+io.sockets.on('connection', function (socket) {
+  var socketID = socket.id;
+  socket.on('message', function (data) {
+    io.sockets.connected[socketID].emit('message', {
+      message: "Hello"
+    });
+  });
+});
 server.listen(process.env.PORT || 80);

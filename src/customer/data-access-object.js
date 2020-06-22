@@ -7,82 +7,98 @@ let database = FirebaseAdmin.database().ref(configuration.database.customer)
 export default {
 
     /**
+     * 
      * @param {string} username 
-     * @param {string} password
+     * @param {string} password 
      */
     async queryByUsernamePassword(username, password) {
-        let info = null
+        var customer = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let data = { ...child.val() }
-            if (data.username === username && data.password === password) {
-                delete data.password
-                info = {
-                    id: child.key,
-                    info: data
-                }
+            let info = child.val()
+            if (info.username === username && info.password === password) {
+                customer = { id: child.key , ...info }
+                if (('registrationTokens' in customer) === false)
+                    customer.registrationTokens = []
+                return true
             }
-            return info !== null
+            return false
         })
-        return info
+        return customer
     },
 
     /**
+     * 
      * @param {string} id 
      */
     async queryByID(id) {
-        let data = await database.child(id).once('value')
-        let info = data.val()
-        if ('password' in info)
-            delete info.password
-        return {
-            id: data.key,
-            info: info
-        }
+        let customer = (await database.child(id).once('value')).val()
+        if (customer !== null && ('registrationTokens' in customer) === false)
+            customer.registrationTokens = []
+        return customer
     },
 
     /**
+     * 
      * @param {Customer} customer 
      */
     async create(customer) {
-        var unvalid = false
-        let snapshot = await database.once('value')
-        snapshot.forEach((child) => {
-            if (child.val().username === customer.username)
-                unvalid = true
-            return unvalid
+        var id = null
+        (await database.once('value')).forEach((child) => {
+            if (child.val().username === customer.username) {
+                id = child.key
+                return true
+            }
+            return false
         })
-        if (unvalid === false) {
-            let data = { ...customer }
-            if ('id' in data)
-                delete data.id
-            let ref = await database.push()
-            ref.set(data)
-            return ref.key
-        }
-        return null
+        return id
     },
 
     /**
+     * 
      * @param {Customer} customer 
      */
-    async modify(customer) {
-        let data = { ...customer }
-        if ('id' in data)
-            delete data.id
-        let valid = (await database.child(customer.id).once('value')).exists()
-        if (valid === true)
-            database.child(customer.id).set(data)
-        return valid
+    async modify(username, password, customer) {
+        let info = await this.queryByUsernamePassword(username, password)
+        if (info === null)
+            return false
+        info.password = customer.password
+        info.firstname = customer.firstname
+        info.lastname = customer.lastname
+        info.email = customer.last
+        let data = { ...info }
+        delete data.id
+        database.child(info.id).set(data)
+        return true
     },
 
     /**
+     * 
+     * @param {string} id 
+     * @param {string} token 
+     */
+    async setToken(id, token) {
+        let ref = database.child(id)
+        if ((await ref.once('value')).exists() === false)
+            return false
+        let registrationTokensRef = ref.child('registrationTokens')
+        var registrationTokens = (await registrationTokensRef.once('value')).val()
+        registrationTokens.push(token)
+        registrationTokensRef.set(registrationTokens)
+        return true
+    },
+
+    /**
+     * 
      * @param {string} id 
      */
     async remove(id) {
-        let valid = (await database.child(id).once('value')).exists()
-        if (valid === true)
-            database.child(id).remove()
-        return valid
+        let ref = database.child(id)
+        if ((await ref.once('value')).exists() === true) {
+            ref.remove()
+            return true
+        }
+        return false
     }
+
 }

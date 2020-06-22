@@ -19,5 +19,7 @@ export default class {
         this.categories = categories
         this.description = description
         this.photo = photo
+        this.rating = 0
+        this.ratingTimes = 0
     }
 }

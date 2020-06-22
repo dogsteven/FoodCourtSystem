@@ -30,6 +30,8 @@ function _default(id, vendorID, name, price, quantity, categories, description, 
   this.categories = categories;
   this.description = description;
   this.photo = photo;
+  this.rating = 0;
+  this.ratingTimes = 0;
 };
 
 exports["default"] = _default;

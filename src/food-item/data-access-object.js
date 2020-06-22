@@ -9,7 +9,7 @@ export default {
         let foods = []
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let data = Object.assign({ id: child.key }, { ...child.val() })
+            let data = { id: child.key, ...child.val() }
             foods.push(data)
         })
         return foods
@@ -21,7 +21,7 @@ export default {
      */
     async queryByID(id) {
         let item = (await database.child(id).once('value')).val()
-        return { id: id, ...item}
+        return { id: id, ...item }
     },
 
     /**

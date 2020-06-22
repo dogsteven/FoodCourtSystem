@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -21,13 +19,11 @@ var _firebase = _interopRequireDefault(require("../firebase"));
 
 var _configuration = _interopRequireDefault(require("../configuration"));
 
-var _model = _interopRequireDefault(require("./cart-item/model"));
+var _model = _interopRequireDefault(require("./order-item/model"));
 
-var _model2 = _interopRequireDefault(require("./model"));
+var _model2 = _interopRequireDefault(require("./cart-item/model"));
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+var _model3 = _interopRequireDefault(require("./model"));
 
 var database = _firebase["default"].database().ref(_configuration["default"].database.order);
 
@@ -38,76 +34,64 @@ var Controller = /*#__PURE__*/function () {
     this.cookingQueue = {};
   }
   /**
-   * @param {string} vendorID 
+   * 
    * @param {string} customerID 
-   * @param {CartItem[]} items 
+   * @param {CartItem[]} cartItems 
    */
 
 
   (0, _createClass2["default"])(Controller, [{
     key: "makeOrder",
     value: function () {
-      var _makeOrder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(vendorID, customerID, items) {
-        var ref, id, order;
+      var _makeOrder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(customerID, cartItems) {
+        var ref, id;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                ref = database.child(vendorID).push();
+                _context.next = 2;
+                return database.push();
+
+              case 2:
+                ref = _context.sent;
+                id = ref.key;
                 ref.set({
                   customerID: customerID,
-                  items: items
+                  cartItems: cartItems
                 });
-                _context.next = 4;
-                return ref;
+                return _context.abrupt("return", new _model3["default"](id, customerID, cartItems));
 
-              case 4:
-                id = _context.sent.key;
-                order = new _model2["default"](id, customerID, items);
-                if (vendorID in this.waitingQueue === false) this.waitingQueue[vendorID] = [];
-                this.waitingQueue[vendorID].push(order);
-                return _context.abrupt("return", id);
-
-              case 9:
+              case 6:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee);
       }));
 
-      function makeOrder(_x, _x2, _x3) {
+      function makeOrder(_x, _x2) {
         return _makeOrder.apply(this, arguments);
       }
 
       return makeOrder;
     }()
-  }, {
-    key: "pushOrderFromWaitingQueueToCookingQueue",
-    value: function pushOrderFromWaitingQueueToCookingQueue(vendorID) {
-      if (vendorID in this.waitingQueue === false) return null;
-      if (this.waitingQueue[vendorID].legnth === 0) return null;
+    /**
+     * 
+     * @param {Order} order 
+     */
 
-      var order = _objectSpread({}, this.waitingQueue[vendorID][0]);
-
-      this.waitingQueue[vendorID].splice(0, 1);
-      if (vendorID in this.cookingQueue === false) this.cookingQueue[vendorID] = [];
-      this.cookingQueue[vendorID].push(order);
-      return order;
-    }
   }, {
-    key: "popCompleteOrderFromCookingQueue",
-    value: function popCompleteOrderFromCookingQueue(vendorID, orderID) {
-      if (vendorID in this.cookingQueue === false) return null;
-      var index = this.cookingQueue[vendorID].findIndex(function (order) {
-        return order.id === orderID;
+    key: "pushOrderToWaitingQueue",
+    value: function pushOrderToWaitingQueue(order) {
+      var _this = this;
+
+      var orderItems = order.makeOrderItems();
+      orderItems.forEach(function (orderItem) {
+        var vendorID = orderItem.vendorID;
+        if (vendorID in _this.waitingQueue === false) _this.waitingQueue[vendorID] = [];
+
+        _this.waitingQueue[vendorID].push(orderItem);
       });
-      if (index === -1) return null;
-
-      var order = _objectSpread({}, this.cookingQueue[vendorID][index]);
-
-      this.cookingQueue[vendorID].splice(index, 1);
-      return order;
     }
   }]);
   return Controller;

@@ -1,5 +1,6 @@
 import FirebaseAdmin from '../firebase'
 import configuration from '../configuration'
+import OrderItem from './order-item/model'
 import CartItem from './cart-item/model'
 import Order from './model'
 
@@ -12,47 +13,34 @@ class Controller {
     }
 
     /**
-     * @param {string} vendorID 
+     * 
      * @param {string} customerID 
-     * @param {CartItem[]} items 
+     * @param {CartItem[]} cartItems 
      */
-    async makeOrder(vendorID, customerID, items) {
-        let ref = database.child(vendorID).push()
+    async makeOrder(customerID, cartItems) {
+        let ref = await database.push()
+        let id = ref.key
         ref.set({
             customerID: customerID,
-            items: items
+            cartItems: cartItems
         })
-        let id = (await ref).key
-        let order = new Order(id, customerID, items)
-        if ((vendorID in this.waitingQueue) === false)
-            this.waitingQueue[vendorID] = []
-        this.waitingQueue[vendorID].push(order)
-        return id
+        return new Order(id, customerID, cartItems)
     }
 
-    pushOrderFromWaitingQueueToCookingQueue(vendorID) {
-        if ((vendorID in this.waitingQueue) === false)
-            return null
-        if (this.waitingQueue[vendorID].legnth === 0)
-            return null
-        let order = { ...this.waitingQueue[vendorID][0] }
-        this.waitingQueue[vendorID].splice(0, 1)
-        if ((vendorID in this.cookingQueue) === false)
-            this.cookingQueue[vendorID] = []
-        this.cookingQueue[vendorID].push(order)
-        return order
+    /**
+     * 
+     * @param {Order} order 
+     */
+    pushOrderToWaitingQueue(order) {
+        let orderItems = order.makeOrderItems()
+        orderItems.forEach((orderItem) => {
+            let vendorID = orderItem.vendorID
+            if ((vendorID in this.waitingQueue) === false)
+                this.waitingQueue[vendorID] = []
+            this.waitingQueue[vendorID].push(orderItem)
+        })
     }
 
-    popCompleteOrderFromCookingQueue(vendorID, orderID) {
-        if ((vendorID in this.cookingQueue) === false)
-            return null
-        let index = this.cookingQueue[vendorID].findIndex(order => order.id === orderID)
-        if (index === -1)
-            return null
-        let order = { ...this.cookingQueue[vendorID][index] }
-        this.cookingQueue[vendorID].splice(index, 1)
-        return order
-    }
     
 }
 
