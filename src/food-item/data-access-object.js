@@ -4,59 +4,82 @@ import FoodItem from './model'
 
 let database = FirebaseAdmin.database().ref(configuration.database["food-item"])
 
+let mutableFields = ['name', 'price', 'quantity', 'categories', 'description', 'photo', 'rating', 'ratingTimes']
+
 export default {
-    async query() {
-        let foods = []
+    /**
+     * @param {(food: FoodItem) => boolean} filter 
+     * @returns {Promise<FoodItem?>}
+     */
+    async queryFirst(filter) {
+        var result = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let data = { id: child.key, ...child.val() }
-            foods.push(data)
+            let info = child.val()
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes)
+            if (filter(food) === true) {
+                result = food
+                return true
+            }
         })
-        return foods
+        return result
     },
 
     /**
-     * @param {string} id 
-     * @returns {FoodItem?}
+     * @param {(food: FoodItem) => boolean} filter 
+     * @returns {Promise<FoodItem[]>}
      */
-    async queryByID(id) {
-        let item = (await database.child(id).once('value')).val()
-        return { id: id, ...item }
+    async query(filter) {
+        var result = []
+        let snapshot = await database.once('value')
+        snapshot.forEach((child) => {
+            let info = child.val()
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes)
+            if (filter(food) === true)
+                result.push(food)
+        })
+        return result
     },
 
     /**
-     * @param {FoodItem} item 
+     * @param {FoodItem} foodItem 
+     * @returns {Promise<string>}
      */
-    create(item) {
-        let data = { ...item }
+    async create(foodItem) {
+        let ref = database.push()
+        let data = { ...foodItem }
         if ('id' in data)
             delete data.id
-        let ref = database.push()
         ref.set(data)
-        return ref.key
+        return (await ref).key
     },
 
-    /**
-     * @param {FoodItem} item 
+    /** 
+     * @param {FoodItem} foodItem 
+     * @returns {void}
      */
-    async modify(item) {
-        let valid = (await database.child(item.id).once('value')).exists()
-        if (valid === true) {
-            let data = { ...item }
-            if ('id' in data)
-                delete data.id
-            database.child(item.id).set(data)
-        }
-        return valid
+    modify(foodItem) {
+        let data = { ...foodItem }
+        if ('id' in data)
+            delete data.id
+        database.child(foodItem.id).set(data)
     },
 
     /**
      * @param {string} id 
+     * @param {string} field 
+     * @param {any} value 
+     */
+    modifyByField(id, field, value) {
+        if (mutableFields.includes(field))
+            database.child(id).child(field).set(value)
+    },
+
+    /** 
+     * @param {string} id
+     * @returns {void} 
      */
     async remove(id) {
-        let valid = (await database.child(id).once('value')).exists()
-        if (valid === true)
-            database.child(id).remove()
-        return valid
+        database.child(id).remove()
     }
 }

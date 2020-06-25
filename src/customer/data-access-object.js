@@ -1,104 +1,92 @@
 import FirebaseAdmin from 'firebase-admin'
 import configuration from '../configuration'
 import Customer from './model'
+import { query } from 'express'
 
 let database = FirebaseAdmin.database().ref(configuration.database.customer)
+
+let mutableFiels = ['password', 'email', 'firstname', 'lastname', 'registrationTokens']
 
 export default {
 
     /**
-     * 
-     * @param {string} username 
-     * @param {string} password 
+     * @param {(customer: Customer) => boolean} filter
+     * @returns {Promise<Customer?>}
      */
-    async queryByUsernamePassword(username, password) {
-        var customer = null
+    async queryFirst(filter) {
+        if (typeof filter !== 'function')
+            return null
+        var result = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
             let info = child.val()
-            if (info.username === username && info.password === password) {
-                customer = { id: child.key , ...info }
-                if (('registrationTokens' in customer) === false)
-                    customer.registrationTokens = []
+            let customer = new Customer(child.key, info.username, info.password, info.firstname, info.lastname, info.email, info.registrationTokens ?? [])
+            if (filter(customer) === true) {
+                result = customer
                 return true
             }
             return false
         })
-        return customer
+        return result
     },
 
     /**
-     * 
-     * @param {string} id 
+     * @param {(customer: Customer) => boolean} filter
+     * @returns {Promise<Customer[]>}
      */
-    async queryByID(id) {
-        let customer = (await database.child(id).once('value')).val()
-        if (customer !== null && ('registrationTokens' in customer) === false)
-            customer.registrationTokens = []
-        return customer
+    async query(filter) {
+        if (typeof filter !== 'function')
+            return null
+        var result = []
+        snapshot.forEach((child) => {
+            let info = child.val()
+            let customer = new Customer(child.key, info.username, info.password, info.firstname, info.lastname, info.email, info.registrationTokens ?? [])
+            if (filter(customer) === true)
+                result.push(customer)
+        })
+        return result
     },
 
     /**
-     * 
      * @param {Customer} customer 
+     * @returns {Promise<string?>}
      */
     async create(customer) {
-        var id = null
-        (await database.once('value')).forEach((child) => {
-            if (child.val().username === customer.username) {
-                id = child.key
-                return true
-            }
-            return false
-        })
-        return id
+        let ref = database.push()
+        let data = { ...customer }
+        if ('id' in data)
+            delete data.id
+        ref.set(data)
+        return (await ref).key
     },
 
     /**
-     * 
      * @param {Customer} customer 
+     * @returns {void}
      */
-    async modify(username, password, customer) {
-        let info = await this.queryByUsernamePassword(username, password)
-        if (info === null)
-            return false
-        info.password = customer.password
-        info.firstname = customer.firstname
-        info.lastname = customer.lastname
-        info.email = customer.last
-        let data = { ...info }
-        delete data.id
-        database.child(info.id).set(data)
-        return true
+    modify(customer) {
+        let data = { ...customer }
+        if ('id' in data)
+            delete data.id
+        database.child(customer.id).set(data)
     },
 
     /**
-     * 
      * @param {string} id 
-     * @param {string} token 
+     * @param {string} field 
+     * @param {any} value 
      */
-    async setToken(id, token) {
-        let ref = database.child(id)
-        if ((await ref.once('value')).exists() === false)
-            return false
-        let registrationTokensRef = ref.child('registrationTokens')
-        var registrationTokens = (await registrationTokensRef.once('value')).val()
-        registrationTokens.push(token)
-        registrationTokensRef.set(registrationTokens)
-        return true
+    modifyByField(id, field, value) {
+        if (mutableFiels.includes(field))
+            database.child(id).child(field).set(value)
     },
 
     /**
-     * 
      * @param {string} id 
+     * @returns {void}
      */
-    async remove(id) {
-        let ref = database.child(id)
-        if ((await ref.once('value')).exists() === true) {
-            ref.remove()
-            return true
-        }
-        return false
+    remove(id) {
+        database.child(id).remove()
     }
 
 }

@@ -1,67 +1,20 @@
-import express from 'express'
-let router = express.Router()
+import { Router } from 'express'
+let router = Router()
 
-import FirebaseAdmin from './firebase'
-
-
-/* database */
-router.get('/test/database/:ref', async (req, res) => {
-    res.json((await FirebaseAdmin.database().ref('/' + req.params.ref).once('value')).val())
-})
-/* end database */
-
-/* food-item */
-import FoodItem from './food-item/model'
-import FoodItemDataAccessObject from './food-item/data-access-object'
-/**
- * get: /api/food-item
- * data trả về ở dạng: 
- * {
- *   {
- *     id
- *     vendorID,
- *     name,
- *     price,
- *     quantity
- *     categories,
- *     description,
- *     photo
- *   }[]
- * }
- */
+/** User space  **/
+/* food */
+import FoodItemController from './food-item/controller'
 router.get('/food-item', async (req, res) => {
-    res.json(await FoodItemDataAccessObject.query())
+    res.json(await FoodItemController.UserService.getAllFood())
 })
-/**
- * get: /api/food-item/:id
- * :id là id của food item muốn lấy thông tin
- * Nếu id là trùng khớp thì trả về
- * {
- *   vendorID,
- *   name,
- *   price,
- *   quantity
- *   categories,
- *   description,
- *   photo
- * }
- */
-router.get('/food-item/:id', async (req, res) => {
-    res.json(await FoodItemDataAccessObject.queryByID(req.params.id))
-})
-/* end food-item */
-
-/* vendor-owner */
-
-/* end vendor-owner */
+/* end food */
 
 /* customer */
-import Customer from './customer/model'
-import CustomerDataAccessObject from './customer/data-access-object'
+import CustomerController from './customer/controller'
 router.get('/customer/:username/:password', async (req, res) => {
     let username = req.params.username
     let password = req.params.password
-    res.json(await CustomerDataAccessObject.queryByUsernamePassword(username, password))
+    res.json(await CustomerController.UserService.queryByUsernamePassword(username, password))
 })
 
 router.post('/customer', async (req, res) => {
@@ -70,8 +23,12 @@ router.post('/customer', async (req, res) => {
     let firstname = req.body.firstname
     let lastname = req.body.lastname
     let email = req.body.email
-    let customer = new Customer("", username, password, firstname, lastname, email)
-    res.json(await CustomerDataAccessObject.create(customer))
+
+    let id = await CustomerController.UserService.register(username, password, firstname, lastname, email)
+    if (id === null)
+        res.json(null)
+    else
+        res.json({ id: id })
 })
 
 router.put('/customer/:username/:password', async (req, res) => {
@@ -81,45 +38,34 @@ router.put('/customer/:username/:password', async (req, res) => {
     let newFirstname = req.body.firstname
     let newLastname = req.body.lastname
     let newEmail = req.body.email
-    let customer = new Customer(username, newPassword, newFirstname, newLastname, newEmail)
+
     res.json({
-        status: await CustomerDataAccessObject.modify(username, password, email)
+        status: await CustomerController.UserService.changeProfile(username, password, newPassword, newFirstname, newLastname, newEmail)
+    })
+})
+
+router.delete('/customer/:username/:password', async (req, res) => {
+    let username = req.params.username
+    let password = req.params.password
+    
+    res.json({
+        status: await CustomerController.UserService.removeAccount(username, password)
+    })
+})
+
+router.get('/customer/:id/newRegistrationToken/:token', async (req, res) => {
+    let id = req.params.id
+    let token = req.params.token
+    res.json({
+        status: await CustomerController.UserService.addNewRegistrationToken(id, token)
     })
 })
 /* end customer */
 
-/* order for customers */
-import OrderController from './order/controller'
-router.post('/order-customer', async (req, res) => {
-    let customerID = req.body.customerID
-    let vendorID = req.body.vendorID
-    let items = req.body.items
-    let customer = await CustomerDataAccessObject.queryByID(customerID)
-    if (customer === null) {
-        res.json({
-            error: "Wrong customerID!"
-        })
-    } else {
-        let id = await OrderController.makeOrder(vendorID, customerID, items)
-        res.json({
-            error: null,
-            id: id
-        })
-    }
-})
-/* end order for customers */
+/* order */
 
-/* order for cooks */
+/* end order */
 
-/* end order for cooks */
-
-/* categories */
-
-router.get('/categories', async (req, res) => {
-    res.json((await FirebaseAdmin.database().ref('/FoodCourt/Categories').once('value')).val())
-})
-
-/* end categories */
-
+/** end User space **/
 
 export default router

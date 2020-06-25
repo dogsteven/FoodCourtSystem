@@ -6,63 +6,35 @@ let database = FirebaseAdmin.database().ref(configuration.database["vendor-owner
 
 export default {
     /**
+     * 
      * @param {string} username 
      * @param {string} password 
      */
-    async queryByUsernamePassword(username, password) {
-        var vendorID = null
+    async queryByUsernameAndPassword(username, password) {
         let snapshot = await database.once('value')
+        let result = null
         snapshot.forEach((child) => {
             let info = child.val()
-            if (info.username === username && info.password == password) {
-                vendorID = info.vendorID
+            if (info.username === username && info.password === password) {
+                result = new VendorOwner(child.key, username, password, info.vendorID, info.firstname, info.lastname, info.email)
                 return true
             }
             return false
         })
-        return vendorID
-    },
-    
-    /**
-     * @param {VendorOwner} info 
-     */
-    async create(info) {
-        if ('id' in info)
-            delete info.id
-        var unvalid = false
-        let snapshot = await database.once('value')
-        snapshot.forEach((child) => {
-            let data = child.val()
-            if (data.username === info.username)
-                unvalid = true
-            return unvalid
-        })
-        if (unvalid === false)
-            (await database.push()).set(info)
-        return !unvalid
+        return result
     },
 
-    /** 
-     * @param {string} username 
-     * @param {string} password 
-     * @param {VendorOwner} newInfo 
+    /**
+     * 
+     * @param {VendorOwner} vendorOwner 
      */
-    async modify(username, password, newInfo) {
-        if ('id' in newInfo)
-            delete newInfo.id
-        let snapshot = await database.once('value')
-        var valid = false
-        snapshot.forEach((child) => {
-            let info = child.val()
-            if (info.username === username && info.password == password) {
-                valid = true
-                var data = { ...newInfo }
-                data.username = username
-                data.vendorID = info.vendorID
-                database.child(child.key).set(data)
-            }
-            return valid
-        })
-        return valid
+    async create(vendorOwner) {
+        let ref = database.push()
+        if ('id' in vendorOwner)
+            delete vendorOwner.id
+        ref.set(vendorOwner)
+        return (await ref).key
     }
+
+    
 }
