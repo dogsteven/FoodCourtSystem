@@ -2,7 +2,7 @@ import CartItem from '../cart-item/model'
 
 export default class {
     /**
-     * @param {string} id 
+     * @param {string} id
      * @param {string} vendorID 
      * @param {CartItem[]} cartItems 
      */

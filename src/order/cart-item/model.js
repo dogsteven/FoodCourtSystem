@@ -1,5 +1,5 @@
 export default class {
-    /** 
+    /**
      * @param {string} vendorID
      * @param {string} foodItemID 
      * @param {number} quantity 

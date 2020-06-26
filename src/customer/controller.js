@@ -69,5 +69,9 @@ export default {
             CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
             return true
         }
+    },
+
+    ManagerService: {
+        
     }
 }

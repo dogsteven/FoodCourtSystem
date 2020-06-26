@@ -1,7 +1,6 @@
 import FirebaseAdmin from 'firebase-admin'
 import configuration from '../configuration'
 import Customer from './model'
-import { query } from 'express'
 
 let database = FirebaseAdmin.database().ref(configuration.database.customer)
 

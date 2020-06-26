@@ -1,6 +1,5 @@
 import FoodItem from './model'
 import FoodItemDataAccessObject from './data-access-object'
-import { database } from 'firebase-admin'
 
 export default {
     UserService: {
