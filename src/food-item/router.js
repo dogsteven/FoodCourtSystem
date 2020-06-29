@@ -20,23 +20,6 @@ function ManagerService(router) {
         res.json(await FoodItemController.ManagerService.getFoodsByVendorID(vendorID))
     })
 
-    router.put('/manager/food-item/:username/:password/:id/:amount', async (req, res) => {
-        let username = req.params.username
-        let password = req.params.password
-        let vendorOwner = await VendorOwnerController.queryByUsernamePassword(username, password)
-        if (vendorOwner !== null) {
-            let id = req.params.id
-            let amount = Number(req.params.amount)
-            let status = await FoodItemController.ManagerService.increaseQuantity(vendorOwner.vendorID, id, amount)
-            res.json({
-                status: status
-            })
-        } else
-            res.json({
-                status: false
-            })
-    })
-
     router.post('/manager/food-item/:username/:password', async (req, res) => {
         let username = req.params.username
         let password = req.params.password
@@ -71,6 +54,23 @@ function ManagerService(router) {
             let description = req.body.description
             let photo = req.body.photo
             let status = await FoodItemController.ManagerService.changeFoodItemInformation(vendorOwner.vendorID, id, name, price, categories, description, photo)
+            res.json({
+                status: status
+            })
+        } else
+            res.json({
+                status: false
+            })
+    })
+
+    router.put('/manager/food-item/:username/:password/:id/increaseQuantity/:amount', async (req, res) => {
+        let username = req.params.username
+        let password = req.params.password
+        let vendorOwner = await VendorOwnerController.queryByUsernamePassword(username, password)
+        if (vendorOwner !== null) {
+            let id = req.params.id
+            let amount = Number(req.params.amount)
+            let status = await FoodItemController.ManagerService.increaseQuantity(vendorOwner.vendorID, id, amount)
             res.json({
                 status: status
             })
