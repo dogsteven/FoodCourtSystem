@@ -20,8 +20,8 @@ function task(vendorID) {
             let snapshot = await database.once('value')
             var result = null
             snapshot.forEach((child) => {
-                let info = child.val()
-                let orderItem = new OrderItem(child.key, info.vendorID, info.cartItems)
+                let { vendorID, cartItems } = child.val()
+                let orderItem = new OrderItem(child.key, vendorID, cartItems)
                 if (filter(orderItem) === true) {
                     result = orderItem
                     return true
@@ -39,8 +39,8 @@ function task(vendorID) {
             let snapshot = await database.once('value')
             let result = []
             snapshot.forEach((child) => {
-                let info = child.val()
-                let orderItem = new OrderItem(child.key, info.vendorID, info.cartItems)
+                let { vendorID, cartItems } = child.val()
+                let orderItem = new OrderItem(child.key, vendorID, cartItems)
                 if (filter(orderItem) === true)
                     result.push(orderItem)
             })

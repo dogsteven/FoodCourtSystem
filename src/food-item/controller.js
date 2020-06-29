@@ -6,7 +6,7 @@ export default {
         /**
          * @returns { Promise<FoodItem[]> }
          */
-        async getAllFood() {
+        async getAllFoods() {
             return await FoodItemDataAccessObject.query((item) => true)
         },
 
@@ -43,6 +43,14 @@ export default {
     },
 
     ManagerService: {
+        /**
+         * @param {string} vendorID 
+         * @returns {Promise<FoodItem[]>}
+         */
+        async getFoodsByVendorID(vendorID) {
+            return await FoodItemDataAccessObject.query((item) => item.vendorID === vendorID)
+        },
+
         /**
          * @param {string} vendorID 
          * @param {string} name 

@@ -5,7 +5,7 @@ import FoodItemController from './controller'
  */
 function UserService(router) {
     router.get('/food-item', async (req, res) => {
-        res.json(await FoodItemController.UserService.getAllFood())
+        res.json(await FoodItemController.UserService.getAllFoods())
     })
 }
 
@@ -13,7 +13,10 @@ function UserService(router) {
  * @param {import('express').Router} router 
  */
 function ManagerService(router) {
-
+    router.get('/manager/food-item/:vendorID', async (req, res) => {
+        let vendorID = req.params.vendorID
+        res.json(await FoodItemController.ManagerService.getFoodsByVendorID(vendorID))
+    })
 }
 
 /**

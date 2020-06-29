@@ -18,8 +18,8 @@ export default {
         var result = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let info = child.val()
-            let customer = new Customer(child.key, info.username, info.password, info.firstname, info.lastname, info.email, info.registrationTokens ?? [])
+            let { username, password, firstname, lastname, email, registrationTokens } = child.val()
+            let customer = new Customer(child.key, username, password, firstname, lastname, email, registrationTokens ?? [])
             if (filter(customer) === true) {
                 result = customer
                 return true
@@ -38,8 +38,8 @@ export default {
             return null
         var result = []
         snapshot.forEach((child) => {
-            let info = child.val()
-            let customer = new Customer(child.key, info.username, info.password, info.firstname, info.lastname, info.email, info.registrationTokens ?? [])
+            let { username, password, firstname, lastname, email, registrationTokens } = child.val()
+            let customer = new Customer(child.key, username, password, firstname, lastname, email, registrationTokens ?? [])
             if (filter(customer) === true)
                 result.push(customer)
         })
