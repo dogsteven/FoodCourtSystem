@@ -67,6 +67,7 @@ export default {
         },
 
         /**
+         * @param {string} vendorID
          * @param {string} id 
          * @param {string} newName 
          * @param {number} newPrice 
@@ -75,29 +76,58 @@ export default {
          * @param {string} newPhoto 
          * @returns {Promise<boolean>}
          */
-        async changeFoodItemInformation(id, newName, newPrice, newCategories, newDescription, newPhoto) {
+        async changeFoodItemInformation(vendorID, id, newName, newPrice, newCategories, newDescription, newPhoto) {
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                foodItem.name = newName
-                foodItem.price = newPrice
-                foodItem.categories = newCategories
-                foodItem.description = newDescription
-                foodItem.photo = newPhoto
-                FoodItemDataAccessObject.modify(foodItem)
-                return true
+                if (foodItem.vendorID === vendorID) {
+                    foodItem.name = newName
+                    foodItem.price = newPrice
+                    foodItem.categories = newCategories
+                    foodItem.description = newDescription
+                    foodItem.photo = newPhoto
+                    FoodItemDataAccessObject.modify(foodItem)
+                    return true
+                }
+                return false
             }
             return false
         },
         
         /**
+         * @param {string} vendorID
          * @param {string} id
          * @returns {Promise<boolean>} 
          */
-        async removeFood(id) {
+        async removeFood(vendorID, id) {
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                FoodItemDataAccessObject.remove(id)
-                return true
+                if (foodItem.vendorID === vendorID) {
+                    FoodItemDataAccessObject.remove(id) 
+                    return true
+                }
+                return false
+            }
+            return false
+        },
+
+        /**
+         * @param {string} vendorID
+         * @param {string} id 
+         * @param {number} amount 
+         * @returns {Promise<boolean?>}
+         */
+        async increaseQuantity(vendorID, id, amount) {
+            if (typeof amount !== 'number')
+                return false
+            if (amount <= 0)
+                return false
+            let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
+            if (foodItem !== null) {
+                if (foodItem.vendorID === vendorID) {
+                    FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
+                    return true
+                }
+                return false
             }
             return false
         },
@@ -107,34 +137,18 @@ export default {
          * @param {number} amount 
          * @returns {Promise<boolean?>}
          */
-        async increaseQuantity(id, amount) {
+        async decreaseQuantity(vendorID, id, amount) {
             if (typeof amount !== 'number')
                 return false
             if (amount <= 0)
                 return false
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
-                return true
-            }
-            return false
-        },
-
-        /**
-         * @param {string} id 
-         * @param {number} amount 
-         * @returns {Promise<boolean?>}
-         */
-        async decreaseQuantity(id, amount) {
-            if (typeof amount !== 'number')
-                return false
-            if (amount <= 0)
-                return false
-            let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
-            if (foodItem !== null) {
+                if (foodItem.vendorID !== vendorID)
+                    return false
                 if (foodItem.quantity < amount)
                     return false
-                    FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity - amount)
+                FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity - amount)
                 return true
             }
             return false

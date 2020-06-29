@@ -16,7 +16,7 @@ export default {
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
             let info = child.val()
-            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes)
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories ?? [], info.description, info.photo, info.rating, info.ratingTimes)
             if (filter(food) === true) {
                 result = food
                 return true
@@ -34,7 +34,7 @@ export default {
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
             let info = child.val()
-            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes)
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories ?? [], info.description, info.photo, info.rating, info.ratingTimes)
             if (filter(food) === true)
                 result.push(food)
         })

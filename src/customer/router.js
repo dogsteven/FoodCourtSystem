@@ -4,6 +4,10 @@ import CustomerController from './controller'
  * @param {import('express').Router} router 
  */
 function UserService(router) {
+    /**
+     * Check if customer has username = :username and password = :password exists
+     * 
+     */
     router.get('/customer/:username/:password', async (req, res) => {
         let username = req.params.username
         let password = req.params.password
