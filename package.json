@@ -1,29 +1,31 @@
 {
-  "name": "food-court-system",
+  "name": "food-server",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "scripts": {
     "build": "npx babel src --out-dir dist",
-    "start": "node dist/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.1",
+    "@babel/core": "^7.10.2",
     "@babel/plugin-transform-regenerator": "^7.10.1",
-    "@babel/preset-env": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "firebase": "^7.14.6",
     "firebase-admin": "^8.12.1",
+    "formidable": "^1.2.2",
+    "socket.io": "^2.3.0",
     "web-push": "^3.4.4"
   },
   "type": "modules",
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.10.1",
-    "@babel/polyfill": "^7.10.1"
+    "@types/express": "^4.17.6"
   }
 }
