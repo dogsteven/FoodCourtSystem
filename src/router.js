@@ -11,4 +11,8 @@ CustomerRouter(router)
 OrderRouter(router)
 VendorOwnerRouter(router)
 
+router.get('/categories', (req, res) => {
+    res.json({})
+})
+
 export default router

@@ -11,3 +11,4 @@
 | `/api/customer/:username/:password` | `PUT` | `{password:String,firstname:String,lastname:String,email:String}` | `headers:"Content-Type":"application/json"` | Modify account infomation | `{status:Boolean}` |
 | `/api/customer/:username/:password`  | `DELETE` | `null` | `null` | Delete account | `{status:Boolean}` |
 | `/api/customer/:id/newRegistrationToken/:token` | `POST` | `null` | `null` | add new registration token to account by id | `{status:Boolean}` |
+| `/api/vendor-owner/:username/:password`| `GET` | `null` | `null` | Get vendor owner account infomation by username and password | `{id:String,vendorID:String,username:String,password:String,firstname:String,lastname:String,email:String}` |
