@@ -6,6 +6,7 @@ export default {
         "order-item": "/FoodCourt/OrderItem",
         "vendor-owner": "/FoodCourt/VendorOwner",
         "image-item": "/FoodCourt/ImageItem",
-        "vendor": "/FoodCourt/Vendor"
+        "vendor": "/FoodCourt/Vendor",
+        "categories": "/FoodCourt/Categories"
     }
 }
