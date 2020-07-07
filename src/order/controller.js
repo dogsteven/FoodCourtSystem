@@ -9,7 +9,6 @@ class Controller {
         this.unpaidQueue = []
         this.waitingQueue = {}
         this.cookingQueue = {}
-
     }
 
     /**
@@ -17,7 +16,8 @@ class Controller {
      * @returns {Promise<Order?>}
      */
     async getOrderByID(id) {
-        return await OrderDataAccessObject.queryFirst((item) => item.id === id)
+        let order = await OrderDataAccessObject.queryFirst((item) => item.id === id)
+        
     }
 
     /**

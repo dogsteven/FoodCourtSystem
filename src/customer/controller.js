@@ -58,6 +58,7 @@ export default {
         },
 
         /**
+         * @param {string} id
          * @param {string} token 
          * @returns {Promise<boolean>}
          */
