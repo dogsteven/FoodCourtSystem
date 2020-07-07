@@ -9,15 +9,54 @@ class Controller {
         this.unpaidQueue = []
         this.waitingQueue = {}
         this.cookingQueue = {}
+        this.completedList = {}
     }
 
     /**
      * @param {string} id 
-     * @returns {Promise<Order?>}
+     * @returns {Promise<OrderItem[]>}
      */
     async getOrderByID(id) {
         let order = await OrderDataAccessObject.queryFirst((item) => item.id === id)
-        
+        if (order === null)
+            return []
+        let orderItems = order.makeOrderItems()
+        for (let i in orderItems) {
+            if (order.state === 'unpaid') {
+                orderItems[i].state = 'unpaid'
+                continue
+            }
+            let vendorID = orderItems[i].vendorID
+            if ((vendorID in this.waitingQueue) === true) {
+                if (this.waitingQueue[vendorID] === null)
+                    continue
+                var index = this.waitingQueue[vendorID].findIndex((item) => item.id === id)
+                if (index !== -1) {
+                    orderItems[i].state = 'waiting'
+                    continue
+                }
+            }
+            if ((vendorID in this.cookingQueue) === true) {
+                if (this.cookingQueue[vendorID] === null)
+                    continue
+                var index = this.cookingQueue[vendorID].findIndex((item) => item.id === id)
+                if (index !== -1) {
+                    orderItems[i].state = 'cooking'
+                    continue
+                }
+            }
+            if ((vendorID in this.completedList) == true) {
+                if (this.completedList[vendorID] === null)
+                    continue
+                var index = this.completedList[vendorID].findIndex((item) => item.id === id)
+                if (index !== -1) {
+                    orderItems[i].state = 'completed'
+                    continue
+                }
+            }
+            orderItems[i].state = 'taked'
+        }
+        return orderItems
     }
 
     /**
@@ -69,6 +108,8 @@ class Controller {
     popOrderFromWaitingQueueToCookingQueue(vendorID) {
         if ((vendorID in this.waitingQueue) === false)
             return false
+        if (this.waitingQueue[vendorID].length === 0)
+            return false
         let info = this.waitingQueue[vendorID][0]
         let orderItem = new OrderItem(info.id, info.vendorID, info.cartItems)
         if ((vendorID in this.cookingQueue) === false)
@@ -83,17 +124,29 @@ class Controller {
      * @param {string} orderID 
      * @returns {boolean}
      */
-    popOrderFromCookingQueue(vendorID, orderID) {
+    popOrderFromCookingQueueToCompletedList(vendorID, orderID) {
         if ((vendorID in this.cookingQueue) === false)
             return false
-        
         let index = this.cookingQueue[vendorID].findIndex((item) => item.id === orderID)
-        if (index === -1) 
+        if (index === -1)
             return false
         let info = this.cookingQueue[vendorID][index]
         let orderItem = new OrderItem(info.id, info.vendorID, info.cartItems)
         OrderItemDataAccessObject(vendorID).create(orderItem)
+        if ((vendorID in this.completedList) === false)
+            this.completedList[vendorID] = []
+        this.completedList[vendorID].push(orderItem)
         this.cookingQueue[vendorID].splice(index, 1)
+        return true
+    }
+
+    popOrderFromCompletedList(vendorID, orderID) {
+        if ((vendorID in this.completedList) === false)
+            return false
+        let index = this.completedList[vendorID].findIndex((item) => item.id === orderID)
+        if (index === -1)
+            return false
+        this.completedList[vendorID].splice(index, 1)
         return true
     }
 }
