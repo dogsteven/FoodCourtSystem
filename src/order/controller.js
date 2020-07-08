@@ -3,6 +3,7 @@ import OrderItem from './order-item/model'
 import Order from './model'
 import OrderDataAccessObject from './data-access-object'
 import OrderItemDataAccessObject from './order-item/data-access-object'
+import FoodItemController from '../food-item/controller'
 
 class Controller {
     constructor() {
@@ -70,9 +71,18 @@ class Controller {
     /**
      * @param {string} customerID 
      * @param {CartItem[]} cartItems 
-     * @returns {Promise<string>}
+     * @returns {Promise<string?>}
      */
     async makeNewOrder(customerID, cartItems) {
+        var valid = true
+        for (let i in cartItems) {
+            valid = cartItems[i].quantity <= (await FoodItemController.UserService.getFoodByID(cartItems[i].foodItemID)).quantity
+            if (valid == false)
+            return null
+        }
+        for (let i in cartItems) {
+            FoodItemController.ManagerService.decreaseQuantity(cartItems[i].vendorID, cartItems[i].foodItemID, cartItems[i].quantity)
+        }
         let order = new Order("", customerID, cartItems)
         let id = await OrderDataAccessObject.create(order)
         order.id = id
