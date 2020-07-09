@@ -11,6 +11,13 @@ export default {
         return await ImageItemDataAccessObject.query((item) => item.vendorID === vendorID)
     },
 
+    async getImageDataByID(id) {
+        let imageItem = await ImageItemDataAccessObject.queryFirst((image) => image.id === id)
+        if (imageItem === null)
+            return null
+        return fs.readFileSync('./static/images/' + imageItem.name + id + '.' + imageItem.extension)
+    },
+
     /**
      * @param {string} vendorID 
      * @param {string} name 
@@ -25,6 +32,5 @@ export default {
         fs.writeFile('./static/images' + realFileName, data)
         return realFileName
     },
-
     
 }

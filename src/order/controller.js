@@ -12,11 +12,16 @@ class Controller {
         this.waitingQueue = {}
         this.cookingQueue = {}
         this.completedList = {}
+        OrderDataAccessObject.query((o) => o.state === 'unpaid')
+            .then((orders) => {
+                for (let i in orders)
+                    this.unpaidOrders.push(orders[i])
+            })
     }
 
     /**
      * @param {string} orderID 
-     * @returns {{ error: string, info: { orderItem: OrderItem, state: string }[] } 
+     * @returns {Promise<{ error: string, info: { orderItem: OrderItem, state: string }[]>} 
      */
     async queryByID(orderID) {
         let order = await OrderDataAccessObject.queryFirst(item => item.id === orderID)
@@ -75,6 +80,33 @@ class Controller {
         return {
             error: null,
             info: info
+        }
+    }
+
+    /**
+     * @param {string} customerID 
+     * @returns {Promise<{ error: string?, body: { id: string, info: { orderItem: OrderItem, state: string }[] }[] }>}
+     */
+    async queryByCustomerID(customerID) {
+        let order = await OrderDataAccessObject.query((o) => o.customerID === customerID)
+        if (order === null)
+            return {
+                error: 'Customer with id ' + customerID + ' is not exist!',
+                body: []
+            }
+        let orderIDs = order.map(o => o.id)
+        var result = []
+        for (let i in orderIDs) {
+            let { info } = await this.queryByID(orderIDs[i])
+            if (info.findIndex((orderItem) => orderItem.state === 'taked') === -1)
+                result.push({
+                    id: orderIDs[i],
+                    info: info
+                })
+        }
+        return {
+            error: null,
+            body: result
         }
     }
 

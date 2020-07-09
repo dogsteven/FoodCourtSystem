@@ -6,7 +6,7 @@ import http from 'http'
 let app = express()
 app.use(express.json())
 app.use(cors({ origin: true }))
-app.use(express.static('static'))
+app.use(express.static('public'))
 app.use('/api', router)
 
 let server = http.createServer(app)

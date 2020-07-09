@@ -11,6 +11,11 @@ function UserService(router) {
         res.json(await OrderController.queryByID(orderID))
     })
 
+    router.get('/order/customer/:id', async (req, res) => {
+        let customerID = req.params.id
+        res.json(await OrderController.queryByCustomerID(customerID))
+    })
+
     router.post('/order', async (req, res) => {
         let customerID = req.body.customerID
         let cartItems = req.body.cartItems.map(item => new CartItem(item.foodID, item.quantity))
