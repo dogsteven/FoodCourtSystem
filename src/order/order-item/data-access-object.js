@@ -21,6 +21,7 @@ function task(vendorID) {
             var result = null
             snapshot.forEach((child) => {
                 let { vendorID, cartItems } = child.val()
+                cartItems = cartItems.map((item) => new CartItem(item.foodID, item.quantity))
                 let orderItem = new OrderItem(child.key, vendorID, cartItems)
                 if (filter(orderItem) === true) {
                     result = orderItem
@@ -40,6 +41,7 @@ function task(vendorID) {
             let result = []
             snapshot.forEach((child) => {
                 let { vendorID, cartItems } = child.val()
+                cartItems = cartItems.map((item) => new CartItem(item.foodID, item.quantity))
                 let orderItem = new OrderItem(child.key, vendorID, cartItems)
                 if (filter(orderItem) === true)
                     result.push(orderItem)
@@ -54,10 +56,7 @@ function task(vendorID) {
         async create(orderItem) {
             let data = {
                 id: orderItem.id,
-                cartItems: orderItem.cartItems.map(item => ({
-                    foodItemID: item.foodItemID,
-                    quantity: item.quantity
-                }))
+                cartItems: orderItem.cartItems
             }
             let ref = database.push()
             ref.set(data)
@@ -71,10 +70,7 @@ function task(vendorID) {
         modify(orderItem) {
             let data = {
                 id: orderItem.id,
-                cartItems: orderItem.cartItems.map(item => ({
-                    foodItemID: item.foodItemID,
-                    quantity: item.quantity
-                }))
+                cartItems: orderItem.cartItems
             }
             database.child(orderItem.id).set(data)
         },

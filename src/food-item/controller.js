@@ -111,23 +111,19 @@ export default {
         },
 
         /**
-         * @param {string} vendorID
          * @param {string} id 
          * @param {number} amount 
          * @returns {Promise<boolean?>}
          */
-        async increaseQuantity(vendorID, id, amount) {
+        async increaseQuantity(id, amount) {
             if (typeof amount !== 'number')
                 return false
             if (amount <= 0)
                 return false
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                if (foodItem.vendorID === vendorID) {
-                    FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
-                    return true
-                }
-                return false
+                FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
+                return true
             }
             return false
         },
@@ -137,15 +133,13 @@ export default {
          * @param {number} amount 
          * @returns {Promise<boolean?>}
          */
-        async decreaseQuantity(vendorID, id, amount) {
+        async decreaseQuantity(id, amount) {
             if (typeof amount !== 'number')
                 return false
             if (amount <= 0)
                 return false
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                if (foodItem.vendorID !== vendorID)
-                    return false
                 if (foodItem.quantity < amount)
                     return false
                 FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity - amount)

@@ -73,6 +73,12 @@ export default {
     },
 
     ManagerService: {
-        
+        /**
+         * @param {string} id 
+         * @returns {Promise<Customer?>}
+         */
+        async queryByID(id) {
+            return await CustomerDataAccessObject.queryFirst((customer) => customer.id === id)
+        }
     }
 }

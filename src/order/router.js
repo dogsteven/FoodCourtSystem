@@ -1,26 +1,21 @@
 import OrderController from './controller'
-
+import CartItem from './cart-item/model'
 
 /**
  * @param {import('express').Router} router 
  */
+
 function UserService(router) {
+    router.get('/order/:id', async (req, res) => {
+        let orderID = req.params.id
+        res.json(await OrderController.queryByID(orderID))
+    })
+
     router.post('/order', async (req, res) => {
         let customerID = req.body.customerID
-        let cartItems = req.body.cartItems
-        res.json({
-            id: await OrderController.makeNewOrder(customerID, cartItems)
-        })
-    })
+        let cartItems = req.body.cartItems.map(item => new CartItem(item.foodID, item.quantity))
 
-    router.get('/order/:id', async (req, res) => {
-        let id = req.params.id
-        res.json(await OrderController.getOrderByID(id))
-    })
-
-    router.get('/order/customer/:id', async (req, res) => {
-        let id = req.params.id
-        res.json(await OrderController.getOrderbyCustomerID(id))
+        res.json(await OrderController.makeOrder(customerID, cartItems))
     })
 }
 
@@ -29,8 +24,8 @@ function UserService(router) {
  */
 function ManagerService(router) {
     router.get('/manager/order/paid/:id', (req, res) => {
-        let id = req.params.id
-        let status = OrderController.pushOrderFromUnpaidToWaitingQueue(id)
+        let orderID = req.params.id
+        let status = OrderController.paidOrder(orderID)
         res.json({
             status: status
         })
@@ -38,25 +33,25 @@ function ManagerService(router) {
 
     router.get('/manager/order/cook/:vendorID', (req, res) => {
         let vendorID = req.params.vendorID
-        let status = OrderController.popOrderFromWaitingQueueToCookingQueue(vendorID)
+        let status = OrderController.popFirstOrderFromWaitingQueueToCookingQueue(vendorID)
         res.json({
             status: status
         })
     })
 
-    router.get('/manager/order/complete/:vendorID/:id', (req, res) => {
+    router.get('/manager/order/complete/:vendorID/:id', async (req, res) => {
         let vendorID = req.params.vendorID
-        let id = req.params.id
-        let status = OrderController.popOrderFromCookingQueueToCompletedList(vendorID, id)
+        let orderID = req.params.id
+        let status = OrderController.completeCooking(vendorID, orderID)
         res.json({
             status: status
         })
     })
 
-    router.get('/manager/order/take/:vendorID/:id', (req, res) => {
+    router.get('/manager/order/take/:vendorID/:id', async (req, res) => {
         let vendorID = req.params.vendorID
-        let id = req.params.id
-        let status = OrderController.popOrderFromCompletedList(vendorID, id)
+        let orderID = req.params.id
+        let status = OrderController.popOrderFromCompletedList(vendorID, orderID)
         res.json({
             status: status
         })

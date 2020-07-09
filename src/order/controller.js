@@ -1,131 +1,170 @@
 import CartItem from './cart-item/model'
 import OrderItem from './order-item/model'
 import Order from './model'
-import OrderDataAccessObject from './data-access-object'
 import OrderItemDataAccessObject from './order-item/data-access-object'
+import OrderDataAccessObject from './data-access-object'
 import FoodItemController from '../food-item/controller'
+import CustomerController from '../customer/controller'
 
 class Controller {
     constructor() {
-        this.unpaidQueue = []
+        this.unpaidOrders = []
         this.waitingQueue = {}
         this.cookingQueue = {}
         this.completedList = {}
     }
 
     /**
-     * @param {string} id 
-     * @returns {Promise<OrderItem[]>}
+     * @param {string} orderID 
+     * @returns {{ error: string, info: { orderItem: OrderItem, state: string }[] } 
      */
-    async getOrderByID(id) {
-        let order = await OrderDataAccessObject.queryFirst((item) => item.id === id)
+    async queryByID(orderID) {
+        let order = await OrderDataAccessObject.queryFirst(item => item.id === orderID)
         if (order === null)
-            return []
-        let orderItems = order.makeOrderItems()
+            return {
+                error: 'Order with id ' + orderID + ' is not exist!',
+                info: null
+            }
+        let orderItems = (await order.makeOrderItems())
+        if (order.state === 'unpaid')
+            return {
+                error: null,
+                info: orderItems.map((orderItem) => ({
+                    orderItem: orderItem,
+                    state: 'unpaid'
+                }))
+            }
+        let info = []
         for (let i in orderItems) {
-            if (order.state === 'unpaid') {
-                orderItems[i].state = 'unpaid'
-                continue
-            }
             let vendorID = orderItems[i].vendorID
-            if ((vendorID in this.waitingQueue) === true) {
-                if (this.waitingQueue[vendorID] === null)
-                    continue
-                var index = this.waitingQueue[vendorID].findIndex((item) => item.id === id)
+            if (vendorID in this.waitingQueue) {
+                let index = this.waitingQueue[vendorID].findIndex((item) => item.id === orderItems[i].id)
                 if (index !== -1) {
-                    orderItems[i].state = 'waiting'
+                    info.push({
+                        orderItem: orderItems[i],
+                        state: 'waiting'
+                    })
                     continue
                 }
             }
-            if ((vendorID in this.cookingQueue) === true) {
-                if (this.cookingQueue[vendorID] === null)
-                    continue
-                var index = this.cookingQueue[vendorID].findIndex((item) => item.id === id)
+            if (vendorID in this.cookingQueue) {
+                let index = this.cookingQueue[vendorID].findIndex((item) => item.id === orderItems[i].id)
                 if (index !== -1) {
-                    orderItems[i].state = 'cooking'
+                    info.push({
+                        orderItem: orderItems[i],
+                        state: 'cooking'
+                    })
                     continue
                 }
             }
-            if ((vendorID in this.completedList) == true) {
-                if (this.completedList[vendorID] === null)
-                    continue
-                var index = this.completedList[vendorID].findIndex((item) => item.id === id)
+            if (vendorID in this.completedList) {
+                let index = this.completedList[vendorID].findIndex((item) => item.id === orderItems[i].id)
                 if (index !== -1) {
-                    orderItems[i].state = 'completed'
+                    info.push({
+                        orderItem: orderItems[i],
+                        state: 'completed'
+                    })
                     continue
                 }
             }
-            orderItems[i].state = 'taked'
+            info.push({
+                orderItem: orderItems[i],
+                state: 'taked'
+            })
         }
-        return orderItems
-    }
-
-    /**
-     * @param {string} id 
-     * @returns {Promise<Order[]>}
-     */
-    async getOrderbyCustomerID(id) {
-        return await OrderDataAccessObject.query((item) => item.customerID === id)
+        return {
+            error: null,
+            info: info
+        }
     }
 
     /**
      * @param {string} customerID 
      * @param {CartItem[]} cartItems 
-     * @returns {Promise<string?>}
+     * @returns {Promise<{ id: string?, error: string?, errorItems: string[] }>}
      */
-    async makeNewOrder(customerID, cartItems) {
-        var valid = true
+    async makeOrder(customerID, cartItems) {
+        if (cartItems.length === 0)
+            return {
+                id: null,
+                error: "Empty cart list!",
+                errorItems: []
+            }
+        let isExist = (await CustomerController.ManagerService.queryByID(customerID)) !== null
+        if (isExist === false)
+            return { 
+                id: null, 
+                error: 'Customer with id ' + customerID + ' is not exist!',
+                errorItems: []
+            }
+        let errorItems = []
         for (let i in cartItems) {
-            valid = cartItems[i].quantity <= (await FoodItemController.UserService.getFoodByID(cartItems[i].foodItemID)).quantity
-            if (valid == false)
-            return null
+            let foodItem = await FoodItemController.UserService.getFoodByID(cartItems[i].foodID)
+            if (foodItem === null)
+                return {
+                    id: null,
+                    error: 'Unvalid food item\'s ID',
+                    errorItems: []
+                }
+            let isEnough = foodItem.quantity >= cartItems[i].quantity
+            if (isEnough === false)
+                errorItems.push(cartItems[i].foodID)
         }
-        for (let i in cartItems) {
-            FoodItemController.ManagerService.decreaseQuantity(cartItems[i].vendorID, cartItems[i].foodItemID, cartItems[i].quantity)
-        }
+        if (errorItems.length > 0)
+            return {
+                id: null,
+                error: 'Out of stock!',
+                errorItems: errorItems
+            }
+        
         let order = new Order("", customerID, cartItems)
+        for (let i in cartItems)
+            FoodItemController.ManagerService.decreaseQuantity(cartItems[i].foodID, cartItems[i].quantity)
+
         let id = await OrderDataAccessObject.create(order)
         order.id = id
-        this.unpaidQueue.push(order)
-        return id
+        this.unpaidOrders.push(order)
+        return {
+            id: id,
+            error: null,
+            errorItems: []
+        }
     }
 
     /**
-     * @param {string} id 
-     * @returns {boolean}
+     * @param {string} id
+     * @returns {boolean} 
      */
-    pushOrderFromUnpaidToWaitingQueue(id) {
-        let index = this.unpaidQueue.findIndex((order) => order.id === id)
-        if (index === -1) 
+    paidOrder(orderID) {
+        let index = this.unpaidOrders.findIndex((order) => order.id === orderID)
+        if (index === -1)
             return false
-        let info = this.unpaidQueue[index]
-        OrderDataAccessObject.modifyByField(info.id, 'state', 'paid')
-        let order = new Order(info.id, info.customerID, info.cartItems, 'waiting')
-        this.unpaidQueue.splice(index, 1)
-        order.makeOrderItems().forEach((item) => {
-            let vendorID = item.vendorID
-            if ((vendorID in this.waitingQueue) === false)
-                this.waitingQueue[vendorID] = []
-            this.waitingQueue[vendorID].push(item)   
+        OrderDataAccessObject.modifyByField(orderID, 'state', 'paid')
+        let order = this.unpaidOrders.splice(index, 1)[0]
+        order.makeOrderItems().then((orderItems) => {
+            for (let i in orderItems) {
+                let vendorID = orderItems[i].vendorID
+                if ((vendorID in this.waitingQueue) === false)
+                    this.waitingQueue[vendorID] = []
+                this.waitingQueue[vendorID].push(orderItems[i])
+            }
         })
         return true
     }
 
     /**
-     * @param {string} vendorID
+     * @param {string} vendorID 
      * @returns {boolean}
      */
-    popOrderFromWaitingQueueToCookingQueue(vendorID) {
+    popFirstOrderFromWaitingQueueToCookingQueue(vendorID) {
         if ((vendorID in this.waitingQueue) === false)
             return false
         if (this.waitingQueue[vendorID].length === 0)
             return false
-        let info = this.waitingQueue[vendorID][0]
-        let orderItem = new OrderItem(info.id, info.vendorID, info.cartItems)
         if ((vendorID in this.cookingQueue) === false)
             this.cookingQueue[vendorID] = []
+        let orderItem = this.waitingQueue[vendorID].splice(0, 1)[0]
         this.cookingQueue[vendorID].push(orderItem)
-        this.waitingQueue[vendorID].splice(0, 1)
         return true
     }
 
@@ -134,29 +173,32 @@ class Controller {
      * @param {string} orderID 
      * @returns {boolean}
      */
-    popOrderFromCookingQueueToCompletedList(vendorID, orderID) {
+    completeCooking(vendorID, orderID) {
         if ((vendorID in this.cookingQueue) === false)
             return false
-        let index = this.cookingQueue[vendorID].findIndex((item) => item.id === orderID)
+        let index = this.cookingQueue[vendorID].findIndex((orderItem) => orderItem.id === orderID)
         if (index === -1)
             return false
-        let info = this.cookingQueue[vendorID][index]
-        let orderItem = new OrderItem(info.id, info.vendorID, info.cartItems)
-        OrderItemDataAccessObject(vendorID).create(orderItem)
         if ((vendorID in this.completedList) === false)
             this.completedList[vendorID] = []
+        let orderItem = this.cookingQueue[vendorID].splice(index, 1)[0]
         this.completedList[vendorID].push(orderItem)
-        this.cookingQueue[vendorID].splice(index, 1)
         return true
     }
 
+    /**
+     * @param {string} vendorID 
+     * @param {string} orderID 
+     * @returns {boolean}
+     */
     popOrderFromCompletedList(vendorID, orderID) {
         if ((vendorID in this.completedList) === false)
             return false
-        let index = this.completedList[vendorID].findIndex((item) => item.id === orderID)
+        let index = this.completedList[vendorID].findIndex((orderItem) => orderItem.id === orderID)
         if (index === -1)
             return false
-        this.completedList[vendorID].splice(index, 1)
+        let orderItem = this.completedList[vendorID].splice(index, 1)[0]
+        OrderItemDataAccessObject(vendorID).create(orderItem)
         return true
     }
 }
