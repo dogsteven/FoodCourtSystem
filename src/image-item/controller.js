@@ -15,7 +15,7 @@ export default {
         let imageItem = await ImageItemDataAccessObject.queryFirst((image) => image.id === id)
         if (imageItem === null)
             return null
-        return fs.readFileSync('./static/images/' + imageItem.name + id + '.' + imageItem.extension)
+        return fs.readFileSync('./static/images/' + imageItem.id + imageItem.name)
     },
 
     /**
@@ -25,12 +25,15 @@ export default {
      * @param {any} data 
      * @returns {Promise<string>}
      */
-    async uploadNewImage(vendorID, name, extension, data) {
-        let imageItem = new ImageItem("", vendorID, name, extension)
+    async uploadNewImage(vendorID, name, data) {
+        let imageItem = new ImageItem("", vendorID, name)
         let id = await ImageItemDataAccessObject.create(imageItem)
-        let realFileName = name + id + '.' + extension
-        fs.writeFile('./static/images' + realFileName, data)
-        return realFileName
+        let realFileName = id + name
+        fs.writeFile('static/images/' + realFileName, data, (error) => {
+            if (error !== null)
+                console.log(error)
+        })
+        return id
     },
     
 }

@@ -15,8 +15,8 @@ export default {
         var result = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let { vendorID, name, extension } = child.val()
-            let imageItem = new ImageItem(child.key)
+            let { vendorID, name } = child.val()
+            let imageItem = new ImageItem(child.key, vendorID, name)
             if (filter(imageItem)) {
                 result = imageItem
                 return true
@@ -34,8 +34,8 @@ export default {
         let result = []
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let { vendorID, name, extension } = child.val()
-            let imageItem = new ImageItem(child.key)
+            let { vendorID, name } = child.val()
+            let imageItem = new ImageItem(child.key, vendorID, name)
             if (filter(imageItem))
                 result.push(imageItem)
         })
