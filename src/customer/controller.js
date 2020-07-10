@@ -65,7 +65,7 @@ export default {
             let customer = await CustomerDataAccessObject.queryFirst((customer) => customer.id === id)
             if (customer === null)
                 return false
-            let newTokens = customer.registrationTokens + [token]
+            let newTokens = customer.registrationTokens.push(token)
             CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
             return true
         }
