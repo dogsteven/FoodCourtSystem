@@ -46,45 +46,72 @@ var _default = {
     },
 
     /**
-     * @param {Customer} newCustomer 
-     * @returns {Promise<string?>}
+     * @param {String} id
+     * @returns {Promise<Customer?>}
      */
-    register: function register(username, password, firstname, lastname, email) {
+    queryByID: function queryByID(id) {
       return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-        var customer;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
                 return _dataAccessObject["default"].queryFirst(function (customer) {
-                  return customer.username === username;
+                  return customer.username === id;
                 });
 
               case 2:
-                _context2.t0 = _context2.sent;
-
-                if (!(_context2.t0 !== null)) {
-                  _context2.next = 5;
-                  break;
-                }
-
-                return _context2.abrupt("return", null);
-
-              case 5:
-                customer = new _model["default"]("", username, password, firstname, lastname, email);
-                _context2.next = 8;
-                return _dataAccessObject["default"].create(customer);
-
-              case 8:
                 return _context2.abrupt("return", _context2.sent);
 
-              case 9:
+              case 3:
               case "end":
                 return _context2.stop();
             }
           }
         }, _callee2);
+      }))();
+    },
+
+    /**
+     * @param {Customer} newCustomer 
+     * @returns {Promise<string?>}
+     */
+    register: function register(username, password, firstname, lastname, email) {
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+        var customer;
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _dataAccessObject["default"].queryFirst(function (customer) {
+                  return customer.username === username;
+                });
+
+              case 2:
+                _context3.t0 = _context3.sent;
+
+                if (!(_context3.t0 !== null)) {
+                  _context3.next = 5;
+                  break;
+                }
+
+                return _context3.abrupt("return", null);
+
+              case 5:
+                customer = new _model["default"]("", username, password, firstname, lastname, email);
+                _context3.next = 8;
+                return _dataAccessObject["default"].create(customer);
+
+              case 8:
+                return _context3.abrupt("return", _context3.sent);
+
+              case 9:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     },
 
@@ -98,52 +125,6 @@ var _default = {
      * @returns {Promise<boolean>}
      */
     changeProfile: function changeProfile(username, password, newPassword, newFirstname, newLastname, newEmail) {
-      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-        var customer;
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return _dataAccessObject["default"].queryFirst(function (customer) {
-                  return customer.username === username && customer.password === password;
-                });
-
-              case 2:
-                customer = _context3.sent;
-
-                if (!(customer === null)) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                return _context3.abrupt("return", false);
-
-              case 5:
-                customer.password = newPassword;
-                customer.firstname = newFirstname;
-                customer.lastname = newLastname;
-                customer.email = newEmail;
-
-                _dataAccessObject["default"].modify(customer);
-
-                return _context3.abrupt("return", true);
-
-              case 11:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-
-    /**
-     * @param {string} username 
-     * @param {string} password 
-     * @param {Promise<boolean>}
-     */
-    removeAccount: function removeAccount(username, password) {
       return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
         var customer;
         return _regenerator["default"].wrap(function _callee4$(_context4) {
@@ -166,11 +147,16 @@ var _default = {
                 return _context4.abrupt("return", false);
 
               case 5:
-                _dataAccessObject["default"].remove(customer.id);
+                customer.password = newPassword;
+                customer.firstname = newFirstname;
+                customer.lastname = newLastname;
+                customer.email = newEmail;
+
+                _dataAccessObject["default"].modify(customer);
 
                 return _context4.abrupt("return", true);
 
-              case 7:
+              case 11:
               case "end":
                 return _context4.stop();
             }
@@ -180,19 +166,20 @@ var _default = {
     },
 
     /**
-     * @param {string} token 
-     * @returns {Promise<boolean>}
+     * @param {string} username 
+     * @param {string} password 
+     * @param {Promise<boolean>}
      */
-    addNewRegistrationToken: function addNewRegistrationToken(id, token) {
+    removeAccount: function removeAccount(username, password) {
       return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
-        var customer, newTokens;
+        var customer;
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
                 return _dataAccessObject["default"].queryFirst(function (customer) {
-                  return customer.id === id;
+                  return customer.username === username && customer.password === password;
                 });
 
               case 2:
@@ -206,6 +193,46 @@ var _default = {
                 return _context5.abrupt("return", false);
 
               case 5:
+                _dataAccessObject["default"].remove(customer.id);
+
+                return _context5.abrupt("return", true);
+
+              case 7:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+
+    /**
+     * @param {string} token 
+     * @returns {Promise<boolean>}
+     */
+    addNewRegistrationToken: function addNewRegistrationToken(id, token) {
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
+        var customer, newTokens;
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.next = 2;
+                return _dataAccessObject["default"].queryFirst(function (customer) {
+                  return customer.id === id;
+                });
+
+              case 2:
+                customer = _context6.sent;
+
+                if (!(customer === null)) {
+                  _context6.next = 5;
+                  break;
+                }
+
+                return _context6.abrupt("return", false);
+
+              case 5:
                 console.log(token);
                 newTokens = customer.registrationTokens.concat(token);
 
@@ -215,14 +242,14 @@ var _default = {
                   console.log(customer.registrationTokens);
                 }
 
-                return _context5.abrupt("return", customer.registrationTokens.length);
+                return _context6.abrupt("return", customer.registrationTokens.length);
 
               case 9:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     }
   },

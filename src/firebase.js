@@ -6,7 +6,8 @@ let ServiceAccount = JSON.parse(Buffer.from(ServiceAccountKey, 'base64').toStrin
 
 FirebaseAdmin.initializeApp({
     credential: FirebaseAdmin.credential.cert(ServiceAccount),
-    databaseURL: "https://food-app-e9bf0.firebaseio.com"
+    databaseURL: "https://food-app-e9bf0.firebaseio.com",
+    messagingSenderId: '1040681844532'
 })
 
 export default FirebaseAdmin
