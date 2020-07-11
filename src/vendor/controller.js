@@ -30,11 +30,13 @@ export default {
      */
     async modify(username, password, id, name, description) {
         let vendorOwner = await VendorOwnerController.queryByUsernamePassword(username, password)
-        if (vendorOwner.vendorID == id) {
+        if (vendorOwner === null)
+            return false
+        if (vendorOwner.vendorID === id) {
             let vendor = new Vendor(id, name, description)
             VendorDataAccessObject.modify(vendor)
             return true
         }
         return false
-    }
+    },
 }

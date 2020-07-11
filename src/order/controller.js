@@ -20,6 +20,36 @@ class Controller {
     }
 
     /**
+     * @param {string} vendorID 
+     * @returns {Order[]}
+     */
+    getWaitingQueue(vendorID) {
+        if ((vendorID in this.waitingQueue) === false)
+            this.waitingQueue[vendorID] = []
+        return this.waitingQueue[vendorID]
+    }
+
+    /**
+     * @param {string} vendorID 
+     * @returns {Order[]}
+     */
+    getCookingQueue(vendorID) {
+        if ((vendorID in this.cookingQueue) === false)
+            this.cookingQueue[vendorID] = []
+        return this.cookingQueue[vendorID]
+    }
+
+    /**
+     * @param {string} vendorID 
+     * @returns {Order[]}
+     */
+    getCompletedList(vendorID) {
+        if ((vendorID in this.completedList) === false)
+            this.completedList[vendorID] = []
+        return this.completedList[vendorID]
+    }
+
+    /**
      * @param {string} orderID 
      * @returns {Promise<{ error: string, info: { orderItem: OrderItem, state: string }[]>} 
      */
@@ -167,7 +197,7 @@ class Controller {
      * @param {string} id
      * @returns {boolean} 
      */
-    paidOrder(orderID) {
+    pushToWaitingQueue(orderID) {
         let index = this.unpaidOrders.findIndex((order) => order.id === orderID)
         if (index === -1)
             return false
@@ -215,6 +245,10 @@ class Controller {
             this.completedList[vendorID] = []
         let orderItem = this.cookingQueue[vendorID].splice(index, 1)[0]
         this.completedList[vendorID].push(orderItem)
+        // Push notification here 
+        //
+        //
+        //
         return true
     }
 
@@ -233,6 +267,8 @@ class Controller {
         OrderItemDataAccessObject(vendorID).create(orderItem)
         return true
     }
+
+
 }
 
 export default new Controller()

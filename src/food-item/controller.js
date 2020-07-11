@@ -111,17 +111,20 @@ export default {
         },
 
         /**
+         * @param {string} vendorID
          * @param {string} id 
          * @param {number} amount 
          * @returns {Promise<boolean?>}
          */
-        async increaseQuantity(id, amount) {
+        async increaseQuantity(vendorID, id, amount) {
             if (typeof amount !== 'number')
                 return false
             if (amount <= 0)
                 return false
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
+                if (foodItem.vendorID !== vendorID)
+                    return false
                 FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
                 return true
             }

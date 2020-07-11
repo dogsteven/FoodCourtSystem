@@ -2,7 +2,7 @@ import Vendor from './model'
 import FirebaseAdmin from '../firebase'
 import configuration from '../configuration'
 
-let database = FirebaseAdmin.database().ref(configuration.vendor)
+let database = FirebaseAdmin.database().ref(configuration.database.vendor)
 
 let mutableFields = ['name', 'description']
 

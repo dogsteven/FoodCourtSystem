@@ -12,19 +12,25 @@ export default {
     },
 
     /**
+     * @returns {Promise<VendorOwner[]>}
+     */
+    async queryByAll() {
+        return await VendorOwnerDataAccessObject.query((vo) => true)
+    },
+
+    /**
      * @param {string} username 
      * @param {string} password 
-     * @param {string} vendorID 
      * @param {string} firstname 
      * @param {string} lastname 
      * @param {string} email 
-     * @returns {Promise<string?>}
+     * @param {string} vendorID 
      */
-    async register(username, password, vendorID, firstname, lastname, email) {
-        let vendorOwner = new VendorOwner("", username, password, vendorID, firstname, lastname, email)
-        let isExist = await VendorOwnerDataAccessObject.queryFirst((vo) => vo.username === username) !== null
-        if (isExist === true)
+    async create(username, password, firstname, lastname, email, vendorID) {
+        let isExist = (await VendorOwnerDataAccessObject.queryFirst((vo) => vo.username === username)) !== null
+        if (isExist)
             return null
+        let vendorOwner = new VendorOwner("", username, password, vendorID, firstname, lastname, email)
         return await VendorOwnerDataAccessObject.create(vendorOwner)
     }
 }

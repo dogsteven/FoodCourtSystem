@@ -30,7 +30,7 @@ function UserService(router) {
 function ManagerService(router) {
     router.get('/manager/order/paid/:id', (req, res) => {
         let orderID = req.params.id
-        let status = OrderController.paidOrder(orderID)
+        let status = OrderController.pushToWaitingQueue(orderID)
         res.json({
             status: status
         })
