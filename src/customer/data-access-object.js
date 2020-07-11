@@ -58,6 +58,21 @@ export default {
         ref.set(data)
         return (await ref).key
     },
+    
+    /**
+     * @param {Notification} StringContent
+     * @returns {void}
+     */
+    // async send(notification)
+    // {
+    //     var fcmKey = "AAAA8k14vzQ:APA91bGnrw4WYwDgzpichuR9l0KE2aq1DbMFx_m3O-mzysiDh6vSHt0ylbnyDJDM6YGAgWYfu7PB4E_1Ak8VgISOwPsFQwheyB1E0-UeDgXzEg_4d2IxorQMagY_xGfZYdalGNsJ6I2Y"
+    //     var http = new HttpClient();
+    //     http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "key=" + fcmKey);
+    //     http.DefaultRequestHeaders.TryAddWithoutValidation("content-length", notification.Length.ToString());
+    //     var content = new StringContent(notification, System.Text.Encoding.UTF8, "application/json");
+
+    //     var response = await http.PostAsync("https://fcm.googleapis.com/fcm/send", content);
+    // },
 
     /**
      * @param {Customer} customer 

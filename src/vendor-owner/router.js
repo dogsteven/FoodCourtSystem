@@ -10,6 +10,12 @@ function run(router) {
         res.json(await VendorOwnerController.queryByUsernamePassword(username, password))
     })
 
+    router.get('/vendor-owner/notification/:id/:content', async(req, res)=> {
+        let userID = req.params.id
+        let content = req.params.content
+        
+    })
+
     router.post('/vendor-owner/:key', async (req, res) => {
         let key = req.params.key
         let username = req.body.username

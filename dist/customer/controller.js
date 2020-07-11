@@ -206,13 +206,18 @@ var _default = {
                 return _context5.abrupt("return", false);
 
               case 5:
-                newTokens = customer.registrationTokens + [token];
+                console.log(token);
+                newTokens = customer.registrationTokens.concat(token);
 
-                _dataAccessObject["default"].modifyByField(id, 'registrationTokens', newTokens);
+                if (!customer.registrationTokens.includes(token)) {
+                  _dataAccessObject["default"].modifyByField(id, 'registrationTokens', newTokens);
 
-                return _context5.abrupt("return", true);
+                  console.log(customer.registrationTokens);
+                }
 
-              case 8:
+                return _context5.abrupt("return", customer.registrationTokens.length);
+
+              case 9:
               case "end":
                 return _context5.stop();
             }
