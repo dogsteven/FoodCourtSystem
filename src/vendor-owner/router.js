@@ -41,11 +41,17 @@ function run(router) {
      * @param {string} foodID ready food
      * @returns {void}
      */
-    router.post('/vendor-owner/notification/done/:vendor/:userid/:foodID', async(req, res) => {
+    router.get('/vendor-owner/notification/done/:vendor/:password/:userid/:foodID', async(req, res) => {
         let owner = req.params.vendor
-        let user = req.params.userid
-        let foodID = red.params.foodID
-        console.log(owner)
+        let password = req.params.password
+        let user = req.params.userids
+        let foodID = req.params.foodID
+        
+        let vendorOwner = await VendorOwnerController.queryByUsernamePassword(owner, password)
+        if (vendorOwner === null) {
+            return null
+        }
+
         var registrationToken = 'eNUNsTrBoq0EO5onwhEFgD:APA91bHibBCMFgSTyFHucg5rU_wJ4Qk2Eut_T4ivYeTEMlI93N2ItlBFPJqYOQfZvoQ3rus0iPB_XHbblMq2vLVmkDxpenGT0otyN01II_6NWMwNj8o30upVqWMBnKab6RemZQeGKg-t'
         var message = {
             notification: {
@@ -60,7 +66,7 @@ function run(router) {
             .catch((error) => {
                 console.log('Error sending message:', error);
         });
-        res.json(await VendorOwnerController.queryByUsernamePassword('dogsteven', 'thisismypassword'))
+        res.json(message)
     })
 
     router.post('/vendor-owner/:key', async (req, res) => {

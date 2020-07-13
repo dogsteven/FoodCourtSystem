@@ -106,17 +106,32 @@ function run(router) {
    * @returns {void}
    */
 
-  router.post('/vendor-owner/notification/done/:vendor/:userid/:foodID', /*#__PURE__*/function () {
+  router.get('/vendor-owner/notification/done/:vendor/:password/:userid/:foodID', /*#__PURE__*/function () {
     var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
-      var owner, user, foodID, registrationToken, message;
+      var owner, password, user, foodID, vendorOwner, registrationToken, message;
       return _regenerator["default"].wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               owner = req.params.vendor;
-              user = req.params.userid;
-              foodID = red.params.foodID;
-              console.log(owner);
+              password = req.params.password;
+              user = req.params.userids;
+              foodID = req.params.foodID;
+              _context3.next = 6;
+              return _controller["default"].queryByUsernamePassword(owner, password);
+
+            case 6:
+              vendorOwner = _context3.sent;
+
+              if (!(vendorOwner === null)) {
+                _context3.next = 9;
+                break;
+              }
+
+              return _context3.abrupt("return", null);
+
+            case 9:
+              console.log(vendorOwner.vendorID);
               registrationToken = 'eNUNsTrBoq0EO5onwhEFgD:APA91bHibBCMFgSTyFHucg5rU_wJ4Qk2Eut_T4ivYeTEMlI93N2ItlBFPJqYOQfZvoQ3rus0iPB_XHbblMq2vLVmkDxpenGT0otyN01II_6NWMwNj8o30upVqWMBnKab6RemZQeGKg-t';
               message = {
                 notification: {
@@ -132,16 +147,9 @@ function run(router) {
                 console.log('Error sending message:', error);
               });
 
-              _context3.t0 = res;
-              _context3.next = 10;
-              return _controller["default"].queryByUsernamePassword('dogsteven', 'thisismypassword');
+              res.json(message);
 
-            case 10:
-              _context3.t1 = _context3.sent;
-
-              _context3.t0.json.call(_context3.t0, _context3.t1);
-
-            case 12:
+            case 14:
             case "end":
               return _context3.stop();
           }
