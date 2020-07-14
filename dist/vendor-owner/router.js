@@ -131,7 +131,6 @@ function run(router) {
               return _context3.abrupt("return", null);
 
             case 9:
-              console.log(vendorOwner.vendorID);
               registrationToken = 'eNUNsTrBoq0EO5onwhEFgD:APA91bHibBCMFgSTyFHucg5rU_wJ4Qk2Eut_T4ivYeTEMlI93N2ItlBFPJqYOQfZvoQ3rus0iPB_XHbblMq2vLVmkDxpenGT0otyN01II_6NWMwNj8o30upVqWMBnKab6RemZQeGKg-t';
               message = {
                 notification: {
@@ -149,7 +148,7 @@ function run(router) {
 
               res.json(message);
 
-            case 14:
+            case 13:
             case "end":
               return _context3.stop();
           }
