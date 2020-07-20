@@ -1,5 +1,6 @@
 import FoodItem from './model'
 import FoodItemDataAccessObject from './data-access-object'
+import Categories from '../categories'
 
 export default {
     UserService: {
@@ -63,6 +64,12 @@ export default {
          */
         async addNewFood(vendorID, name, price, quantity, categories, description, photo) {
             let foodItem = new FoodItem("", vendorID, name, price, quantity, categories, description, photo)
+            Categories.query().then((existingCategories) => {
+                categories.forEach((category) => {
+                    if (existingCategories.includes(category) === false)
+                        Categories.addNewCategories(category)
+                })
+            })
             return await FoodItemDataAccessObject.create(foodItem)
         },
 

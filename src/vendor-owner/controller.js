@@ -32,5 +32,18 @@ export default {
             return null
         let vendorOwner = new VendorOwner("", username, password, vendorID, firstname, lastname, email)
         return await VendorOwnerDataAccessObject.create(vendorOwner)
+    },
+
+    /**
+     * @param {string} id 
+     * @returns {Promise<boolean>}
+     */
+    async remove(id) {
+        let isExist = (await VendorOwnerDataAccessObject.queryFirst((vo) => vo.id === id)) !== null
+        if (isExist) {
+            VendorOwnerDataAccessObject.remove(id)
+            return true
+        }
+        return false
     }
 }

@@ -33,7 +33,7 @@ function run(router) {
                 error: 'Wrong username or password!',
                 id: null
             })
-        else if (req.files.file === null)
+        else if (req.files === null)
             res.json({
                 error: 'Empty file!',
                 id: null
@@ -43,6 +43,27 @@ function run(router) {
                 error: null,
                 id: await ImageItemController.uploadNewImage(vendorOwner.vendorID, req.files.file.name, req.files.file.data)
             })
+    })
+
+    router.delete('/image-item/:id/:username/:password', (req, res) => {
+        let username = req.params.username
+        let password = req.params.password
+        let id = req.params.id
+        
+        VendorOwnerController.queryByUsernamePassword(username, password)
+            .then((vo) => {
+                if (vo === null)
+                    res.json({
+                        error: 'Username or password is incorrect!',
+                        status: false
+                    })
+                else
+                    ImageItemController.removeImageItem(vo.vendorID, id)
+                        .then((response) => {
+                            res.json(response)
+                        })
+            })
+        
     })
 }
 

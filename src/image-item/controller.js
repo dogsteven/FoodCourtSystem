@@ -36,4 +36,31 @@ export default {
         return id
     },
     
+    /**
+     * @param {string} id 
+     * @returns {Promise<{ error: string?, status: boolean? }>}
+     */
+    async removeImageItem(vendorID, id) {
+        let imageItem = await ImageItemDataAccessObject.queryFirst((image) => image.id === id)
+        if (imageItem === null)
+            return {
+                error: 'Image with id ' + id + ' is not exist!',
+                status: false
+            }
+        if (imageItem.vendorID !== vendorID)
+            return {
+                error: 'Unvalid image item!',
+                status: false
+            }
+        let filePath = './static/images/' + imageItem.id + imageItem.name
+        ImageItemDataAccessObject.remove(id)
+        fs.unlink(filePath, (error) => {
+            if (error)
+                console.log(error)
+        })
+        return {
+            error: null,
+            status: true
+        }
+    }
 }

@@ -1,5 +1,6 @@
 import FirebaseAdmin from './firebase'
 import configuration from './configuration'
+import controller from './food-item/controller'
 
 let database = FirebaseAdmin.database().ref(configuration.database.categories)
 
@@ -21,7 +22,20 @@ let Controller = {
      * @returns {Promise<boolean>}
      */
     async addNewCategories(category) {
-        
+        var valid = true
+        var counter = 0
+        let snapshot = await database.once('value')
+        snapshot.forEach((child) => {
+            if (child.val() === category) {
+                valid = false
+                return true
+            }
+            counter += 1
+            return false
+        })
+        if (valid)
+            database.child(counter).set(category)
+        return valid
     },
 
     
@@ -37,4 +51,12 @@ function run(router) {
     })
 }
 
-export default run
+export default {
+    /**
+     * @param {import('express').Router} router 
+     */
+    Router(router) {
+        run(router)
+    },
+    ...Controller
+}
