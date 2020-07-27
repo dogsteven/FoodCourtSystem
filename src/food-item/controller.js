@@ -40,6 +40,22 @@ export default {
                 return true
             }
             return false
+        },
+
+        /**
+         * @param {string} id 
+         * @param {number} rating 
+         * @returns {Promose<number>}
+         */
+        async newRating(id, rating) {
+            let foodItem = await FoodItemDataAccessObject.queryFirst((f) => f.id === id)
+            if (foodItem === null)
+                return null
+            let n = foodItem.ratingTimes
+            foodItem.rating = (foodItem.rating * n + Number(rating)) / (n + 1)
+            foodItem.ratingTimes = n + 1
+            FoodItemDataAccessObject.modify(foodItem)
+            return foodItem.rating
         }
     },
 

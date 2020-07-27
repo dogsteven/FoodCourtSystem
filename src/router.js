@@ -6,6 +6,7 @@ import VendorOwnerRouter from './vendor-owner/router'
 import Categories from './categories'
 import ImageItemRouter from './image-item/router'
 import VendorRouter from './vendor/router'
+import RatingRouter from './rating/router'
 
 let router = Router()
 
@@ -15,6 +16,7 @@ OrderRouter(router)
 VendorOwnerRouter(router)
 ImageItemRouter(router)
 VendorRouter(router)
+RatingRouter(router)
 
 Categories.Router(router)
 

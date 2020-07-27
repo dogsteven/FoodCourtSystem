@@ -7,6 +7,7 @@ export default {
         "vendor-owner": "/FoodCourt/VendorOwner",
         "image-item": "/FoodCourt/ImageItem",
         "vendor": "/FoodCourt/Vendor",
-        "categories": "/FoodCourt/Categories"
+        "categories": "/FoodCourt/Categories",
+        "rating": "/FoodCourt/RatingTable"
     }
 }
