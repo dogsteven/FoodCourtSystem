@@ -11,4 +11,4 @@ app.use('/api', router)
 
 let server = http.createServer(app)
 
-server.listen(process.env.PORT || 80)
+server.listen(process.env.PORT || 8000)

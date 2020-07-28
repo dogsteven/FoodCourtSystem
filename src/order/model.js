@@ -1,32 +1,22 @@
-import CartItem from './cart-item/model'
-import OrderItem from './order-item/model'
+import OrderItem from './item/model'
 
 export default class {
     /**
-     * @param {string} id 
+     * @param {string} id
      * @param {string} customerID 
-     * @param {CartItem[]} cartItems 
-     * @param {string} state
+     * @param {OrderItem[]} items
      */
-    constructor(id, customerID, cartItems, state = "unpaid") {
+    constructor(id, customerID, items) {
         this.id = id
         this.customerID = customerID
-        this.cartItems = cartItems
-        this.state = state
+        this.items = items
     }
 
-    /**
-     * @returns {OrderItem[]}
-     */
-    makeOrderItems() {
-        let orderItems = []
-        this.cartItems.forEach((item) => {
-            let index = orderItems.findIndex((orderItem) => orderItem.vendorID === item.vendorID)
-            if (index === -1)
-                orderItems.push(new OrderItem(this.id, item.vendorID, [item]))
-            else
-                orderItems[index].cartItems.push(item)
+    price() {
+        var total = 0
+        this.items.forEach((item) => {
+            total += item.price()
         })
-        return orderItems
+        return total
     }
 }

@@ -11,29 +11,30 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _model = _interopRequireDefault(require("./item/model"));
+var _dataAccessObject = _interopRequireDefault(require("../../food-item/data-access-object"));
 
 var _default = /*#__PURE__*/function () {
   /**
-   * @param {string} id
-   * @param {string} customerID 
-   * @param {OrderItem[]} items
+   * @param {string} itemID 
+   * @param {number} quantity 
    */
-  function _default(id, customerID, items) {
+  function _default(itemID, quantity) {
     (0, _classCallCheck2["default"])(this, _default);
-    this.id = id;
-    this.customerID = customerID;
-    this.items = items;
+    this.itemID = itemID;
+    this.quantity = quantity;
   }
+  /**
+   * @returns {number}
+   */
+
 
   (0, _createClass2["default"])(_default, [{
     key: "price",
     value: function price() {
-      var total = 0;
-      this.items.forEach(function (item) {
-        total += item.price();
-      });
-      return total;
+      var item = _dataAccessObject["default"].queryByID(id);
+
+      if (item === null) return 0;
+      return item.price * this.quantity;
     }
   }]);
   return _default;
