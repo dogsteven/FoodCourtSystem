@@ -17,11 +17,7 @@ app.use((0, _cors["default"])({
 }));
 app.use(_express["default"]["static"]('static'));
 app.use('/api', _router["default"]);
-<<<<<<< HEAD
 
 var server = _http["default"].createServer(app);
 
 server.listen(process.env.PORT || 80);
-=======
-app.listen(process.env.PORT || 8000);
->>>>>>> origin/backhoa

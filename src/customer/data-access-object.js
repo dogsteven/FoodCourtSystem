@@ -43,17 +43,9 @@ export default {
 
     /**
      * @param {Customer} customer 
-<<<<<<< HEAD
      * @returns {Promise<string?>}
      */
-    async create(customer) {
-        let ref = database.push()
-        let data = { ...customer }
-        if ('id' in data)
-            delete data.id
-        ref.set(data)
-        return (await ref).key
-    },
+    
     
     /**
      * @param {Notification} StringContent
@@ -74,13 +66,7 @@ export default {
      * @param {Customer} customer 
      * @returns {void}
      */
-    modify(customer) {
-        let data = { ...customer }
-        if ('id' in data)
-            delete data.id
-        database.child(customer.id).set(data)
-=======
-     */
+   
     async create(customer) {
         var unvalid = false
         let snapshot = await database.once('value')
@@ -111,12 +97,10 @@ export default {
         if (valid === true)
             database.child(customer.id).set(data)
         return valid
->>>>>>> origin/backhoa
     },
 
     /**
      * @param {string} id 
-<<<<<<< HEAD
      * @param {string} field 
      * @param {any} value 
      */
@@ -129,17 +113,11 @@ export default {
      * @param {string} id 
      * @returns {void}
      */
-    remove(id) {
-        database.child(id).remove()
-    }
 
-=======
-     */
     async remove(id) {
         let valid = (await database.child(id).once('value')).exists()
         if (valid === true)
             database.child(id).remove()
         return valid
     }
->>>>>>> origin/backhoa
 }

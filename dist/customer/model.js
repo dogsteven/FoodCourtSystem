@@ -17,15 +17,8 @@ var _default =
  * @param {string} firstname 
  * @param {string} lastname 
  * @param {string} email 
-<<<<<<< HEAD
- * @param {string[]} registrationTokens
  */
 function _default(id, username, password, firstname, lastname, email) {
-  var registrationTokens = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
-=======
- */
-function _default(id, username, password, firstname, lastname, email) {
->>>>>>> origin/backhoa
   (0, _classCallCheck2["default"])(this, _default);
   this.id = id;
   this.username = username;
@@ -33,10 +26,6 @@ function _default(id, username, password, firstname, lastname, email) {
   this.firstname = firstname;
   this.lastname = lastname;
   this.email = email;
-<<<<<<< HEAD
-  this.registrationTokens = registrationTokens;
-=======
->>>>>>> origin/backhoa
 };
 
 exports["default"] = _default;

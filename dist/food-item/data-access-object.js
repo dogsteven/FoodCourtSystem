@@ -7,17 +7,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-<<<<<<< HEAD
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-=======
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
->>>>>>> origin/backhoa
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _firebase = _interopRequireDefault(require("../firebase"));
@@ -32,52 +25,24 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var database = _firebase["default"].database().ref(_configuration["default"].database["food-item"]);
 
-<<<<<<< HEAD
-var mutableFields = ['name', 'price', 'quantity', 'categories', 'description', 'photo', 'rating', 'ratingTimes'];
-var _default = {
-  /**
-   * @param {(food: FoodItem) => boolean} filter 
-   * @returns {Promise<FoodItem?>}
-   */
-  queryFirst: function queryFirst(filter) {
-    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-      var result, snapshot;
-=======
 var _default = {
   query: function query() {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
       var foods, snapshot;
->>>>>>> origin/backhoa
       return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-<<<<<<< HEAD
-              result = null;
-=======
               foods = {};
->>>>>>> origin/backhoa
               _context.next = 3;
               return database.once('value');
 
             case 3:
               snapshot = _context.sent;
               snapshot.forEach(function (child) {
-<<<<<<< HEAD
-                var info = child.val();
-                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes);
-
-                if (filter(food) === true) {
-                  result = food;
-                  return true;
-                }
-              });
-              return _context.abrupt("return", result);
-=======
                 foods[child.key] = _objectSpread({}, child.val());
               });
               return _context.abrupt("return", foods);
->>>>>>> origin/backhoa
 
             case 6:
             case "end":
@@ -89,40 +54,15 @@ var _default = {
   },
 
   /**
-<<<<<<< HEAD
-   * @param {(food: FoodItem) => boolean} filter 
-   * @returns {Promise<FoodItem[]>}
-   */
-  query: function query(filter) {
-    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-      var result, snapshot;
-=======
    * @param {string} id 
    * @returns {FoodItem?}
    */
   queryByID: function queryByID(id) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
->>>>>>> origin/backhoa
       return _regenerator["default"].wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-<<<<<<< HEAD
-              result = [];
-              _context2.next = 3;
-              return database.once('value');
-
-            case 3:
-              snapshot = _context2.sent;
-              snapshot.forEach(function (child) {
-                var info = child.val();
-                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes);
-                if (filter(food) === true) result.push(food);
-              });
-              return _context2.abrupt("return", result);
-
-            case 6:
-=======
               _context2.next = 2;
               return database.child(id).once('value');
 
@@ -130,7 +70,6 @@ var _default = {
               return _context2.abrupt("return", _context2.sent.val());
 
             case 3:
->>>>>>> origin/backhoa
             case "end":
               return _context2.stop();
           }
@@ -140,14 +79,6 @@ var _default = {
   },
 
   /**
-<<<<<<< HEAD
-   * @param {FoodItem} foodItem 
-   * @returns {Promise<string>}
-   */
-  create: function create(foodItem) {
-    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-      var ref, data;
-=======
    * @param {FoodItem} item 
    */
   create: function create(item) {
@@ -165,24 +96,10 @@ var _default = {
   modify: function modify(item) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
       var valid, data;
->>>>>>> origin/backhoa
       return _regenerator["default"].wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-<<<<<<< HEAD
-              ref = database.push();
-              data = _objectSpread({}, foodItem);
-              if ('id' in data) delete data.id;
-              ref.set(data);
-              _context3.next = 6;
-              return ref;
-
-            case 6:
-              return _context3.abrupt("return", _context3.sent.key);
-
-            case 7:
-=======
               _context3.next = 2;
               return database.child(item.id).once('value');
 
@@ -198,7 +115,6 @@ var _default = {
               return _context3.abrupt("return", valid);
 
             case 5:
->>>>>>> origin/backhoa
             case "end":
               return _context3.stop();
           }
@@ -207,50 +123,16 @@ var _default = {
     }))();
   },
 
-<<<<<<< HEAD
-  /** 
-   * @param {FoodItem} foodItem 
-   * @returns {void}
-   */
-  modify: function modify(foodItem) {
-    var data = _objectSpread({}, foodItem);
-
-    if ('id' in data) delete data.id;
-    database.child(foodItem.id).set(data);
-  },
-
-  /**
-   * @param {string} id 
-   * @param {string} field 
-   * @param {any} value 
-   */
-  modifyByField: function modifyByField(id, field, value) {
-    if (mutableFields.includes(field)) database.child(id).child(field).set(value);
-  },
-
-  /** 
-   * @param {string} id
-   * @returns {void} 
-   */
-  remove: function remove(id) {
-    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
-=======
   /**
    * @param {string} id 
    */
   remove: function remove(id) {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
       var valid;
->>>>>>> origin/backhoa
       return _regenerator["default"].wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-<<<<<<< HEAD
-              database.child(id).remove();
-
-            case 1:
-=======
               _context4.next = 2;
               return database.child(id).once('value');
 
@@ -260,7 +142,6 @@ var _default = {
               return _context4.abrupt("return", valid);
 
             case 5:
->>>>>>> origin/backhoa
             case "end":
               return _context4.stop();
           }

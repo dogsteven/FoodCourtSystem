@@ -7,23 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-<<<<<<< HEAD
-var _express = require("express");
-
-var _router = _interopRequireDefault(require("./food-item/router"));
-
-var _router2 = _interopRequireDefault(require("./customer/router"));
-
-var _router3 = _interopRequireDefault(require("./order/router"));
-
-var _router4 = _interopRequireDefault(require("./vendor-owner/router"));
-
-var router = (0, _express.Router)();
-(0, _router["default"])(router);
-(0, _router2["default"])(router);
-(0, _router3["default"])(router);
-(0, _router4["default"])(router);
-=======
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -43,8 +26,11 @@ var _model3 = _interopRequireDefault(require("./customer/model"));
 var _dataAccessObject3 = _interopRequireDefault(require("./customer/data-access-object"));
 
 var router = _express["default"].Router();
-/* food-item */
 
+router.get('/', function (req, res) {
+  res.end('hello');
+});
+/* food-item */
 
 router.get('/food-item', /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
@@ -329,6 +315,5 @@ router.put('/customer/:username/:password', /*#__PURE__*/function () {
 }());
 /* end customer */
 
->>>>>>> origin/backhoa
 var _default = router;
 exports["default"] = _default;
