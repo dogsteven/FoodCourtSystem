@@ -105,5 +105,4 @@ router.put('/customer/:username/:password', async (req, res) => {
 })
 /* end customer */
 
-
 export default router
