@@ -25,6 +25,8 @@ var _model3 = _interopRequireDefault(require("./customer/model"));
 
 var _dataAccessObject3 = _interopRequireDefault(require("./customer/data-access-object"));
 
+var _controller = _interopRequireDefault(require("./food-item/controller"));
+
 var router = _express["default"].Router();
 
 router.get('/', function (req, res) {
@@ -314,6 +316,39 @@ router.put('/customer/:username/:password', /*#__PURE__*/function () {
   };
 }());
 /* end customer */
+
+/** start manager */
+
+router.get('/manager/food-item/:vendorID', /*#__PURE__*/function () {
+  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(req, res) {
+    var vendorID;
+    return _regenerator["default"].wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            vendorID = req.params.vendorID;
+            _context9.t0 = res;
+            _context9.next = 4;
+            return _controller["default"].ManagerService.getFoodsByVendorID(vendorID);
+
+          case 4:
+            _context9.t1 = _context9.sent;
+
+            _context9.t0.json.call(_context9.t0, _context9.t1);
+
+          case 6:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+
+  return function (_x17, _x18) {
+    return _ref9.apply(this, arguments);
+  };
+}());
+/** end man */
 
 var _default = router;
 exports["default"] = _default;
