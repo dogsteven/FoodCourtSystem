@@ -11,6 +11,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+<<<<<<< HEAD
 var _model = _interopRequireDefault(require("./cart-item/model"));
 
 var _model2 = _interopRequireDefault(require("./order-item/model"));
@@ -48,6 +49,31 @@ var _default = /*#__PURE__*/function () {
         if (index === -1) orderItems.push(new _model2["default"](_this.id, item.vendorID, [item]));else orderItems[index].cartItems.push(item);
       });
       return orderItems;
+=======
+var _model = _interopRequireDefault(require("./item/model"));
+
+var _default = /*#__PURE__*/function () {
+  /**
+   * @param {string} id
+   * @param {string} customerID 
+   * @param {OrderItem[]} items
+   */
+  function _default(id, customerID, items) {
+    (0, _classCallCheck2["default"])(this, _default);
+    this.id = id;
+    this.customerID = customerID;
+    this.items = items;
+  }
+
+  (0, _createClass2["default"])(_default, [{
+    key: "price",
+    value: function price() {
+      var total = 0;
+      this.items.forEach(function (item) {
+        total += item.price();
+      });
+      return total;
+>>>>>>> origin/backhoa
     }
   }]);
   return _default;

@@ -14,8 +14,7 @@ var ServiceAccount = JSON.parse(Buffer.from(ServiceAccountKey, 'base64').toStrin
 
 _firebaseAdmin["default"].initializeApp({
   credential: _firebaseAdmin["default"].credential.cert(ServiceAccount),
-  databaseURL: "https://food-app-e9bf0.firebaseio.com",
-  messagingSenderId: '1040681844532'
+  databaseURL: "https://food-app-e9bf0.firebaseio.com"
 });
 
 var _default = _firebaseAdmin["default"];
