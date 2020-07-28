@@ -106,9 +106,15 @@ router.put('/customer/:username/:password', async (req, res) => {
 /* end customer */
 /** start manager */
 import FoodItemController from './food-item/controller'
+import OrderAccessObject from './order/data-access-object'
 router.get('/manager/food-item/:vendorID', async (req, res) => {
     let vendorID = req.params.vendorID
     res.json(await FoodItemController.ManagerService.getFoodsByVendorID(vendorID))
+})
+
+router.get('/manager/unpaidorder/:vendorID', async(req, res) => {
+    let vendorID = req.params.vendorID
+    res.json(await OrderAccessObject.query((item) => true))
 })
 /** end man */
 export default router

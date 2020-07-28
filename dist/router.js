@@ -27,6 +27,8 @@ var _dataAccessObject3 = _interopRequireDefault(require("./customer/data-access-
 
 var _controller = _interopRequireDefault(require("./food-item/controller"));
 
+var _dataAccessObject4 = _interopRequireDefault(require("./order/data-access-object"));
+
 var router = _express["default"].Router();
 
 router.get('/', function (req, res) {
@@ -346,6 +348,38 @@ router.get('/manager/food-item/:vendorID', /*#__PURE__*/function () {
 
   return function (_x17, _x18) {
     return _ref9.apply(this, arguments);
+  };
+}());
+router.get('/manager/unpaidorder/:vendorID', /*#__PURE__*/function () {
+  var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(req, res) {
+    var vendorID;
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            console.log('come here');
+            vendorID = req.params.vendorID;
+            _context10.t0 = res;
+            _context10.next = 5;
+            return _dataAccessObject4["default"].query(function (item) {
+              return true;
+            });
+
+          case 5:
+            _context10.t1 = _context10.sent;
+
+            _context10.t0.json.call(_context10.t0, _context10.t1);
+
+          case 7:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+
+  return function (_x19, _x20) {
+    return _ref10.apply(this, arguments);
   };
 }());
 /** end man */
