@@ -29,6 +29,8 @@ var _controller = _interopRequireDefault(require("./food-item/controller"));
 
 var _dataAccessObject4 = _interopRequireDefault(require("./order/data-access-object"));
 
+var _controller2 = _interopRequireDefault(require("./order/controller"));
+
 var router = _express["default"].Router();
 
 router.get('/', function (req, res) {
@@ -357,20 +359,19 @@ router.get('/manager/unpaidorder/:vendorID', /*#__PURE__*/function () {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
-            console.log('come here');
             vendorID = req.params.vendorID;
             _context10.t0 = res;
-            _context10.next = 5;
+            _context10.next = 4;
             return _dataAccessObject4["default"].query(function (item) {
               return true;
             });
 
-          case 5:
+          case 4:
             _context10.t1 = _context10.sent;
 
             _context10.t0.json.call(_context10.t0, _context10.t1);
 
-          case 7:
+          case 6:
           case "end":
             return _context10.stop();
         }
@@ -382,6 +383,16 @@ router.get('/manager/unpaidorder/:vendorID', /*#__PURE__*/function () {
     return _ref10.apply(this, arguments);
   };
 }());
+router.get('/manager/order/complete/:vendorID/:id', function (req, res) {
+  var vendorID = req.params.vendorID;
+  var id = req.params.id;
+
+  var status = _controller2["default"].popOrderFromCookingQueue(vendorID, id);
+
+  res.json({
+    status: status
+  });
+});
 /** end man */
 
 var _default = router;

@@ -107,6 +107,7 @@ router.put('/customer/:username/:password', async (req, res) => {
 /** start manager */
 import FoodItemController from './food-item/controller'
 import OrderAccessObject from './order/data-access-object'
+import OrderController from './order/controller'
 router.get('/manager/food-item/:vendorID', async (req, res) => {
     let vendorID = req.params.vendorID
     res.json(await FoodItemController.ManagerService.getFoodsByVendorID(vendorID))
@@ -116,5 +117,32 @@ router.get('/manager/unpaidorder/:vendorID', async(req, res) => {
     let vendorID = req.params.vendorID
     res.json(await OrderAccessObject.query((item) => true))
 })
+
+router.get('/manager/order/paid/:id', (req, res) => {
+    let id = req.params.id
+    let status = OrderController.pushOrderFromUnpaidToWaitingQueue(id)
+    res.json({
+        status: status
+    })
+})
+
+router.get('/manager/order/cook/:vendorID', (req, res) => {
+    let vendorID = req.params.vendorID
+    let status = OrderController.popOrderFromWaitingQueueToCookingQueue(vendorID)
+    res.json({
+        status: status
+    })
+})
+
+router.get('/manager/order/complete/:vendorID/:id', (req, res) => {
+    let vendorID = req.params.vendorID
+    let id = req.params.id
+    let status = OrderController.popOrderFromCookingQueue(vendorID, id)
+    res.json({
+        status: status
+    })
+})
+
+
 /** end man */
 export default router
