@@ -1,4 +1,5 @@
-import { Router } from 'express'
+import express from 'express'
+let router = express.Router()
 import FoodItemRouter from './food-item/router'
 import CustomerRouter from './customer/router'
 import OrderRouter from './order/router'
@@ -8,7 +9,9 @@ import ImageItemRouter from './image-item/router'
 import VendorRouter from './vendor/router'
 import RatingRouter from './rating/router'
 
-let router = Router()
+router.get('/', (req, res) => {
+    res.end('hello')
+})
 
 FoodItemRouter(router)
 CustomerRouter(router)

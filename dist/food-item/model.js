@@ -19,8 +19,6 @@ var _default =
  * @param {string[]} categories 
  * @param {string} description 
  * @param {string} photo 
- * @param {number} rating
- * @param {number} ratingTimes
  */
 function _default(id, vendorID, name, price, quantity, categories, description, photo) {
   var rating = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;

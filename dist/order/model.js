@@ -15,23 +15,20 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _model = _interopRequireDefault(require("./cart-item/model"));
-
-var _model2 = _interopRequireDefault(require("./order-item/model"));
+var _model = _interopRequireDefault(require("./item/model"));
 
 var _default = /*#__PURE__*/function () {
   /**
-   * @param {string} id 
+   * @param {string} id
    * @param {string} customerID 
-   * @param {CartItem[]} cartItems 
-   * @param {string} state
+   * @param {OrderItem[]} items
    */
-  function _default(id, customerID, cartItems) {
-    var state = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "unpaid";
+  function _default(id, customerID, items) {
+    var state = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'unpaid';
     (0, _classCallCheck2["default"])(this, _default);
     this.id = id;
     this.customerID = customerID;
-    this.cartItems = cartItems;
+    this.cartItems = items;
     this.state = state;
   }
 
@@ -62,7 +59,7 @@ var _default = /*#__PURE__*/function () {
                           index = result.findIndex(function (item) {
                             return item.vendorID === vendorID;
                           });
-                          if (index === -1) result.push(new _model2["default"](_this.id, vendorID, [_this.cartItems[i]]));else result[index].cartItems.push(_this.cartItems[i]);
+                          if (index === -1) result.push(new _model["default"](_this.id, vendorID, [_this.cartItems[i]]));else result[index].cartItems.push(_this.cartItems[i]);
 
                         case 5:
                         case "end":

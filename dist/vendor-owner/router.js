@@ -13,6 +13,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _controller = _interopRequireDefault(require("./controller"));
 
+var _firebase = _interopRequireDefault(require("../firebase"));
+
 /**
  * @param {import('express').Router} router 
  */
@@ -153,6 +155,27 @@ function run(router) {
       return _ref4.apply(this, arguments);
     };
   }());
+  router.get('/vendor-owner/notification/test/:customerID', function (req, res) {
+    var registrationToken = 'cmqHAiTLoT9s_amyIo7EEh:APA91bEwOwBnJcA_aDOhsoQmHSTax0XQv7NjVi5NtarobbEGDhgJ3O0QTq4GLV9M4BrNSoWWj7MekM55TnbbwDF_hNRmXcTPEnZEmCGo5F7DyKTNkd7NpS65ACBvWzbIFnT5o8e71o0s';
+    var message = {
+      notification: {
+        title: 'Vui lòng đến quầy để lấy thức ăn',
+        body: 'Nhớ mang theo hóa đơn nhé!',
+        imageUrl: 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
+      },
+      token: registrationToken
+    };
+
+    _firebase["default"].messaging().send(message).then(function (response) {
+      console.log('Successfully sent message:', response);
+    })["catch"](function (error) {
+      console.log('Error sending message:', error);
+    });
+
+    res.json({
+      'alo': 'wtf'
+    });
+  });
 }
 
 var _default = run;

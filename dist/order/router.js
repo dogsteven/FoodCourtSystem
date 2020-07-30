@@ -15,6 +15,8 @@ var _controller = _interopRequireDefault(require("./controller"));
 
 var _model = _interopRequireDefault(require("./cart-item/model"));
 
+var _dataAccessObject = _interopRequireDefault(require("./data-access-object"));
+
 /**
  * @param {import('express').Router} router 
  */
@@ -145,6 +147,46 @@ function UserService(router) {
 
 
 function ManagerService(router) {
+  router.get('/manager/unpaidorder/:vendorID', /*#__PURE__*/function () {
+    var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
+      var vendorID;
+      return _regenerator["default"].wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              vendorID = req.params.vendorID;
+              _context5.t0 = res;
+              _context5.next = 4;
+              return _dataAccessObject["default"].query(function (item) {
+                return true;
+              });
+
+            case 4:
+              _context5.t1 = _context5.sent;
+
+              _context5.t0.json.call(_context5.t0, _context5.t1);
+
+            case 6:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
+
+    return function (_x9, _x10) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
+  router.get('/manager/order/paid/:id', function (req, res) {
+    var orderID = req.params.id;
+
+    var status = _controller["default"].pushToWaitingQueue(orderID);
+
+    res.json({
+      status: status
+    });
+  });
   router.get('/manager/order/paid/:id', function (req, res) {
     var orderID = req.params.id;
 
@@ -164,32 +206,6 @@ function ManagerService(router) {
     });
   });
   router.get('/manager/order/complete/:vendorID/:id', /*#__PURE__*/function () {
-    var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
-      var vendorID, orderID, status;
-      return _regenerator["default"].wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              vendorID = req.params.vendorID;
-              orderID = req.params.id;
-              status = _controller["default"].completeCooking(vendorID, orderID);
-              res.json({
-                status: status
-              });
-
-            case 4:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x9, _x10) {
-      return _ref5.apply(this, arguments);
-    };
-  }());
-  router.get('/manager/order/take/:vendorID/:id', /*#__PURE__*/function () {
     var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(req, res) {
       var vendorID, orderID, status;
       return _regenerator["default"].wrap(function _callee6$(_context6) {
@@ -198,7 +214,7 @@ function ManagerService(router) {
             case 0:
               vendorID = req.params.vendorID;
               orderID = req.params.id;
-              status = _controller["default"].popOrderFromCompletedList(vendorID, orderID);
+              status = _controller["default"].completeCooking(vendorID, orderID);
               res.json({
                 status: status
               });
@@ -213,6 +229,58 @@ function ManagerService(router) {
 
     return function (_x11, _x12) {
       return _ref6.apply(this, arguments);
+    };
+  }());
+  router.get('/manager/order/take/:vendorID/:id', /*#__PURE__*/function () {
+    var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(req, res) {
+      var vendorID, orderID, status;
+      return _regenerator["default"].wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              vendorID = req.params.vendorID;
+              orderID = req.params.id;
+              status = _controller["default"].popOrderFromCompletedList(vendorID, orderID);
+              res.json({
+                status: status
+              });
+
+            case 4:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
+    }));
+
+    return function (_x13, _x14) {
+      return _ref7.apply(this, arguments);
+    };
+  }());
+  router.get('/manager/order/take/:vendorID/:id', /*#__PURE__*/function () {
+    var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(req, res) {
+      var vendorID, orderID, status;
+      return _regenerator["default"].wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              vendorID = req.params.vendorID;
+              orderID = req.params.id;
+              status = _controller["default"].popOrderFromCompletedList(vendorID, orderID);
+              res.json({
+                status: status
+              });
+
+            case 4:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8);
+    }));
+
+    return function (_x15, _x16) {
+      return _ref8.apply(this, arguments);
     };
   }());
 }

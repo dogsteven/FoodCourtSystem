@@ -1,18 +1,16 @@
-import CartItem from './cart-item/model'
-import OrderItem from './order-item/model'
+import OrderItem from './item/model'
 
 
 export default class {
     /**
-     * @param {string} id 
+     * @param {string} id
      * @param {string} customerID 
-     * @param {CartItem[]} cartItems 
-     * @param {string} state
+     * @param {OrderItem[]} items
      */
-    constructor(id, customerID, cartItems, state = "unpaid") {
+    constructor(id, customerID, items, state='unpaid') {
         this.id = id
         this.customerID = customerID
-        this.cartItems = cartItems
+        this.cartItems = items
         this.state = state
     }
 

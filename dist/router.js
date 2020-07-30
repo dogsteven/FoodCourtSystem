@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _express = require("express");
+var _express = _interopRequireDefault(require("express"));
 
 var _router = _interopRequireDefault(require("./food-item/router"));
 
@@ -25,7 +25,11 @@ var _router6 = _interopRequireDefault(require("./vendor/router"));
 
 var _router7 = _interopRequireDefault(require("./rating/router"));
 
-var router = (0, _express.Router)();
+var router = _express["default"].Router();
+
+router.get('/', function (req, res) {
+  res.end('hello');
+});
 (0, _router["default"])(router);
 (0, _router2["default"])(router);
 (0, _router3["default"])(router);

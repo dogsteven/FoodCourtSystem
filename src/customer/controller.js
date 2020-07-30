@@ -13,6 +13,14 @@ export default {
         },
 
         /**
+         * @param {String} id
+         * @returns {Promise<Customer?>}
+         */
+        async queryByID(id) {
+            return await CustomerDataAccessObject.queryFirst((customer) => customer.username === id)
+        },
+
+        /**
          * @param {Customer} newCustomer 
          * @returns {Promise<string?>}
          */
@@ -66,9 +74,13 @@ export default {
             let customer = await CustomerDataAccessObject.queryFirst((customer) => customer.id === id)
             if (customer === null)
                 return false
-            let newTokens = customer.registrationTokens + [token]
-            CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
-            return true
+            console.log(token)
+            let newTokens = customer.registrationTokens.concat(token)
+            if (!customer.registrationTokens.includes(token)) {
+                CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
+                console.log(customer.registrationTokens)
+            }
+            return customer.registrationTokens.length
         }
     },
 
