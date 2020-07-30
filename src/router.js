@@ -23,4 +23,8 @@ RatingRouter(router)
 
 Categories.Router(router)
 
+router.get('/categories', (req, res) => {
+    res.json({})
+})
+
 export default router
