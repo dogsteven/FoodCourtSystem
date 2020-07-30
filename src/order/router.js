@@ -11,6 +11,11 @@ function UserService(router) {
         res.json(await OrderController.queryByID(orderID))
     })
 
+    router.get('/order/taked/customer/:id', async (req, res) => {
+        let customerID = req.params.id
+        res.json(await OrderController.queryTakedOrderByCustomerID(customerID))
+    })
+
     router.get('/order/customer/:id', async (req, res) => {
         let customerID = req.params.id
         res.json(await OrderController.queryByCustomerID(customerID))

@@ -142,6 +142,33 @@ class Controller {
 
     /**
      * @param {string} customerID 
+     * @returns {Promise<{ error: string?, body: { id: string, info: { orderItem: OrderItem, state: string }[] }[] }>}
+     */
+    async queryTakedOrderByCustomerID(customerID) {
+        let order = await OrderDataAccessObject.query((o) => o.customerID === customerID)
+        if (order === null)
+            return {
+                error: 'Customer with id ' + customerID + ' is not exist!',
+                body: []
+            }
+        let orderIDs = order.map(o => o.id)
+        var result = []
+        for (let i in orderIDs) {
+            let { info } = await this.queryByID(orderIDs[i])
+            if (info.findIndex((orderItem) => orderItem.state === 'taked') >= 0)
+                result.push({
+                    id: orderIDs[i],
+                    info: info
+                })
+        }
+        return {
+            error: null,
+            body: result
+        }
+    }
+
+    /**
+     * @param {string} customerID 
      * @param {CartItem[]} cartItems 
      * @returns {Promise<{ id: string?, error: string?, errorItems: string[] }>}
      */
