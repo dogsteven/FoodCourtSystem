@@ -13,6 +13,14 @@ export default {
         },
 
         /**
+         * @param {String} id
+         * @returns {Promise<Customer?>}
+         */
+        async queryByID(id) {
+            return await CustomerDataAccessObject.queryFirst((customer) => customer.username === id)
+        },
+
+        /**
          * @param {Customer} newCustomer 
          * @returns {Promise<string?>}
          */

@@ -4,15 +4,9 @@ import FoodItem from './model'
 
 let database = FirebaseAdmin.database().ref(configuration.database["food-item"])
 
-let mutableFields = ['name', 'price', 'quantity', 'categories', 'description', 'photo', 'rating', 'ratingTimes']
-
 export default {
-    /**
-     * @param {(food: FoodItem) => boolean} filter 
-     * @returns {Promise<FoodItem?>}
-     */
-    async queryFirst(filter) {
-        var result = null
+    async query() {
+        let foods = {}
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
             let info = child.val()
@@ -22,12 +16,12 @@ export default {
                 return true
             }
         })
-        return result
+        return foods
     },
 
     /**
-     * @param {(food: FoodItem) => boolean} filter 
-     * @returns {Promise<FoodItem[]>}
+     * @param {string} id 
+     * @returns {FoodItem?}
      */
     async query(filter) {
         var result = []
@@ -42,44 +36,38 @@ export default {
     },
 
     /**
-     * @param {FoodItem} foodItem 
-     * @returns {Promise<string>}
+     * @param {FoodItem} item 
      */
-    async create(foodItem) {
-        let ref = database.push()
-        let data = { ...foodItem }
+    create(item) {
+        let data = { ...item }
         if ('id' in data)
             delete data.id
+        let ref = database.push()
         ref.set(data)
-        return (await ref).key
+        return ref.key
     },
 
-    /** 
-     * @param {FoodItem} foodItem 
-     * @returns {void}
+    /**
+     * @param {FoodItem} item 
      */
-    modify(foodItem) {
-        let data = { ...foodItem }
-        if ('id' in data)
-            delete data.id
-        database.child(foodItem.id).set(data)
+    async modify(item) {
+        let valid = (await database.child(item.id).once('value')).exists()
+        if (valid === true) {
+            let data = { ...item }
+            if ('id' in data)
+                delete data.id
+            database.child(item.id).set(data)
+        }
+        return valid
     },
 
     /**
      * @param {string} id 
-     * @param {string} field 
-     * @param {any} value 
-     */
-    modifyByField(id, field, value) {
-        if (mutableFields.includes(field))
-            database.child(id).child(field).set(value)
-    },
-
-    /** 
-     * @param {string} id
-     * @returns {void} 
      */
     async remove(id) {
-        database.child(id).remove()
+        let valid = (await database.child(id).once('value')).exists()
+        if (valid === true)
+            database.child(id).remove()
+        return valid
     }
 }

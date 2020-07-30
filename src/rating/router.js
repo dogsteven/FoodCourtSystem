@@ -1,5 +1,4 @@
 import RatingController from './controller'
-import RatingDataAccessObject from './data-access-object'
 
 /** 
  * @param {import('express').Router} router 

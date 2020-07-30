@@ -5,6 +5,8 @@ import OrderItemDataAccessObject from './order-item/data-access-object'
 import OrderDataAccessObject from './data-access-object'
 import FoodItemController from '../food-item/controller'
 import CustomerController from '../customer/controller'
+import CustomerDataAccessObject from '../customer/data-access-object'
+import FirebaseAdmin from '../firebase'
 
 class Controller {
     constructor() {
@@ -142,6 +144,33 @@ class Controller {
 
     /**
      * @param {string} customerID 
+     * @returns {Promise<{ error: string?, body: { id: string, info: { orderItem: OrderItem, state: string }[] }[] }>}
+     */
+    async queryTakedOrderByCustomerID(customerID) {
+        let order = await OrderDataAccessObject.query((o) => o.customerID === customerID)
+        if (order === null)
+            return {
+                error: 'Customer with id ' + customerID + ' is not exist!',
+                body: []
+            }
+        let orderIDs = order.map(o => o.id)
+        var result = []
+        for (let i in orderIDs) {
+            let { info } = await this.queryByID(orderIDs[i])
+            if (info.findIndex((orderItem) => orderItem.state === 'taked') >= 0)
+                result.push({
+                    id: orderIDs[i],
+                    info: info
+                })
+        }
+        return {
+            error: null,
+            body: result
+        }
+    }
+
+    /**
+     * @param {string} customerID 
      * @param {CartItem[]} cartItems 
      * @returns {Promise<{ id: string?, error: string?, errorItems: string[] }>}
      */
@@ -245,10 +274,33 @@ class Controller {
             this.completedList[vendorID] = []
         let orderItem = this.cookingQueue[vendorID].splice(index, 1)[0]
         this.completedList[vendorID].push(orderItem)
-        // Push notification here 
-        //
-        //
-        //
+        OrderDataAccessObject.queryFirst((item) => item.id === orderID)
+            .then((order) => order.customerID)
+            .then((customerID)=> {
+                CustomerDataAccessObject.queryFirst((customer)=> customer.id == customerID)
+                .then(customer => customer.registrationTokens)
+                .then((registrationTokens) => {
+                    registrationTokens.forEach((regToken) => {
+                        var message = {
+                            notification: {
+                                title : 'Vui lòng đến quầy để lấy thức ăn',
+                                body: 'Nhớ mang theo hóa đơn nhé!',
+                                imageUrl : 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
+                            },
+                            token: regToken,
+                        }
+                        FirebaseAdmin.messaging().send(message).then((response) => {
+                                console.log('Successfully sent message:', response);
+                            })
+                            .catch((error) => {
+                                console.log('Error sending message:', error);
+                        });
+                    })
+
+                })
+            })
+        
+        res.json({'alo' : 'wtf'}) 
         return true
     }
 

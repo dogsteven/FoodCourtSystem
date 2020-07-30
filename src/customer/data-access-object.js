@@ -4,70 +4,99 @@ import Customer from './model'
 
 let database = FirebaseAdmin.database().ref(configuration.database.customer)
 
-let mutableFiels = ['password', 'email', 'firstname', 'lastname', 'registrationTokens']
-
 export default {
 
     /**
-     * @param {(customer: Customer) => boolean} filter
-     * @returns {Promise<Customer?>}
+     * @param {string} username 
+     * @param {string} password 
      */
-    async queryFirst(filter) {
-        if (typeof filter !== 'function')
-            return null
-        var result = null
+    async queryByUsernamePassword(username, password) {
+        let info = null
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            let { username, password, firstname, lastname, email, registrationTokens } = child.val()
-            let customer = new Customer(child.key, username, password, firstname, lastname, email, registrationTokens ?? [])
-            if (filter(customer) === true) {
-                result = customer
-                return true
+            let data = { ...child.val() }
+            if (data.username === username && data.password === password) {
+                delete data.password
+                info = {
+                    id: child.key,
+                    info: data
+                }
             }
-            return false
+            return info !== null
         })
-        return result
+        return info
     },
 
     /**
-     * @param {(customer: Customer) => boolean} filter
-     * @returns {Promise<Customer[]>}
+     * @param {string} id 
      */
-    async query(filter) {
-        if (typeof filter !== 'function')
-            return null
-        var result = []
-        snapshot.forEach((child) => {
-            let { username, password, firstname, lastname, email, registrationTokens } = child.val()
-            let customer = new Customer(child.key, username, password, firstname, lastname, email, registrationTokens ?? [])
-            if (filter(customer) === true)
-                result.push(customer)
-        })
-        return result
+    async queryByID(id) {
+        let data = await database.child(id).once('value')
+        let info = data.val()
+        if ('password' in info)
+            delete info.password
+        return {
+            id: data.key,
+            info: info
+        }
     },
 
     /**
      * @param {Customer} customer 
      * @returns {Promise<string?>}
      */
-    async create(customer) {
-        let ref = database.push()
-        let data = { ...customer }
-        if ('id' in data)
-            delete data.id
-        ref.set(data)
-        return (await ref).key
-    },
+    
+    
+    /**
+     * @param {Notification} StringContent
+     * @returns {void}
+     */
+    // async send(notification)
+    // {
+    //     var fcmKey = "AAAA8k14vzQ:APA91bGnrw4WYwDgzpichuR9l0KE2aq1DbMFx_m3O-mzysiDh6vSHt0ylbnyDJDM6YGAgWYfu7PB4E_1Ak8VgISOwPsFQwheyB1E0-UeDgXzEg_4d2IxorQMagY_xGfZYdalGNsJ6I2Y"
+    //     var http = new HttpClient();
+    //     http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "key=" + fcmKey);
+    //     http.DefaultRequestHeaders.TryAddWithoutValidation("content-length", notification.Length.ToString());
+    //     var content = new StringContent(notification, System.Text.Encoding.UTF8, "application/json");
+
+    //     var response = await http.PostAsync("https://fcm.googleapis.com/fcm/send", content);
+    // },
 
     /**
      * @param {Customer} customer 
      * @returns {void}
      */
-    modify(customer) {
+   
+    async create(customer) {
+        var unvalid = false
+        let snapshot = await database.once('value')
+        snapshot.forEach((child) => {
+            if (child.val().username === customer.username)
+                unvalid = true
+            return unvalid
+        })
+        if (unvalid === false) {
+            let data = { ...customer }
+            if ('id' in data)
+                delete data.id
+            let ref = await database.push()
+            ref.set(data)
+            return ref.key
+        }
+        return null
+    },
+
+    /**
+     * @param {Customer} customer 
+     */
+    async modify(customer) {
         let data = { ...customer }
         if ('id' in data)
             delete data.id
-        database.child(customer.id).set(data)
+        let valid = (await database.child(customer.id).once('value')).exists()
+        if (valid === true)
+            database.child(customer.id).set(data)
+        return valid
     },
 
     /**
@@ -84,8 +113,11 @@ export default {
      * @param {string} id 
      * @returns {void}
      */
-    remove(id) {
-        database.child(id).remove()
-    }
 
+    async remove(id) {
+        let valid = (await database.child(id).once('value')).exists()
+        if (valid === true)
+            database.child(id).remove()
+        return valid
+    }
 }

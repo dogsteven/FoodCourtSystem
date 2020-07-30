@@ -1,6 +1,7 @@
+import e from "express"
+
 export default class {
     /**
-     * @param {string} id
      * @param {string} username
      * @param {string} password
      * @param {string} vendorID
@@ -8,8 +9,7 @@ export default class {
      * @param {string} lastname
      * @param {string} email
      */
-    constructor(id, username, password, vendorID, firstname, lastname, email) {
-        this.id = id
+    constructor(username, password, vendorID, firstname, lastname, email) {
         this.username = username
         this.password = password
         this.vendorID = vendorID

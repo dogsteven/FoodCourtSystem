@@ -1,4 +1,5 @@
 import VendorOwnerController from './controller'
+import FirebaseAdmin from '../firebase'
 
 /**
  * @param {import('express').Router} router 
@@ -48,6 +49,25 @@ function run(router) {
         res.json({
             status: await VendorOwnerController.remove(id)
         })
+    })
+
+    router.get('/vendor-owner/notification/test/:customerID', (req, res) => {
+        var registrationToken = 'cmqHAiTLoT9s_amyIo7EEh:APA91bEwOwBnJcA_aDOhsoQmHSTax0XQv7NjVi5NtarobbEGDhgJ3O0QTq4GLV9M4BrNSoWWj7MekM55TnbbwDF_hNRmXcTPEnZEmCGo5F7DyKTNkd7NpS65ACBvWzbIFnT5o8e71o0s'
+        var message = {
+            notification: {
+                title : 'Vui lòng đến quầy để lấy thức ăn',
+                body: 'Nhớ mang theo hóa đơn nhé!',
+                imageUrl : 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
+            },
+            token: registrationToken,
+        }
+        FirebaseAdmin.messaging().send(message).then((response) => {
+                console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+                console.log('Error sending message:', error);
+        });
+        res.json({'alo' : 'wtf'})
     })
 }
 
