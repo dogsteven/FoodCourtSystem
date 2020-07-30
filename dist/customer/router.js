@@ -17,6 +17,10 @@ var _controller = _interopRequireDefault(require("./controller"));
  * @param {import('express').Router} router 
  */
 function UserService(router) {
+  /**
+   * Check if customer has username = :username and password = :password exists
+   * 
+   */
   router.get('/customer/:username/:password', /*#__PURE__*/function () {
     var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
       var username, password;
@@ -150,7 +154,14 @@ function UserService(router) {
       return _ref4.apply(this, arguments);
     };
   }());
-  router.get('/customer/:id/newRegistrationToken/:token', /*#__PURE__*/function () {
+}
+/**
+ * @param {import('express').Router} router 
+ */
+
+
+function ManagerService(router) {
+  router.post('/customer/:id/newRegistrationToken/:token', /*#__PURE__*/function () {
     var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
       var id, token;
       return _regenerator["default"].wrap(function _callee5$(_context5) {
@@ -184,12 +195,6 @@ function UserService(router) {
     };
   }());
 }
-/**
- * @param {import('express').Router} router 
- */
-
-
-function ManagerService(router) {}
 /**
  * @param {import('express').Router} router 
  */

@@ -4,6 +4,10 @@ import CustomerController from './controller'
  * @param {import('express').Router} router 
  */
 function UserService(router) {
+    /**
+     * Check if customer has username = :username and password = :password exists
+     * 
+     */
     router.get('/customer/:username/:password', async (req, res) => {
         let username = req.params.username
         let password = req.params.password
@@ -45,21 +49,19 @@ function UserService(router) {
             status: await CustomerController.UserService.removeAccount(username, password)
         })
     })
-    
-    router.get('/customer/:id/newRegistrationToken/:token', async (req, res) => {
-        let id = req.params.id
-        let token = req.params.token
-        res.json({
-            status: await CustomerController.UserService.addNewRegistrationToken(id, token)
-        })
-    })
 }
 
 /**
  * @param {import('express').Router} router 
  */
 function ManagerService(router) {
-
+    router.post('/customer/:id/newRegistrationToken/:token', async (req, res) => {
+        let id = req.params.id
+        let token = req.params.token
+        res.json({
+            status: await CustomerController.UserService.addNewRegistrationToken(id, token)
+        })
+    })
 }
 
 /**

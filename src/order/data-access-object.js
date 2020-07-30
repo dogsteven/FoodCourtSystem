@@ -1,6 +1,5 @@
-import CartItem from './cart-item/model'
-import OrderItem from './order-item/model'
 import Order from './model'
+import CartItem from './cart-item/model'
 import configuration from '../configuration'
 import FirebaseAdmin from '../firebase'
 
@@ -17,8 +16,9 @@ export default {
         let snapshot = await database.once('value')
         var result = null
         snapshot.forEach((child) => {
-            let { customerID, cartItems } = child.val()
-            let order = new Order(child.key, customerID, cartItems)
+            let { customerID, cartItems, state } = child.val()
+            cartItems = cartItems.map((item) => new CartItem(item.foodID, item.quantity))
+            let order = new Order(child.key, customerID, cartItems, state)
             if (filter(order) === true) {
                 result = order
                 return true
@@ -36,8 +36,9 @@ export default {
         let snapshot = await database.once('value')
         let result = []
         snapshot.forEach((child) => {
-            let { customerID, cartItems } = child.val()
-            let order = new Order(child.key, customerID, cartItems)
+            let { customerID, cartItems, state } = child.val()
+            cartItems = cartItems.map((item) => new CartItem(item.foodID, item.quantity))
+            let order = new Order(child.key, customerID, cartItems, state)
             if (filter(order) === true)
                 result.push(order)
         })

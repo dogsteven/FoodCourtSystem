@@ -3,6 +3,11 @@ export default {
         "customer": "/FoodCourt/Customer",
         "food-item": "/FoodCourt/FoodItem",
         "order": "/FoodCourt/Order",
-        "vendor-owner": "/FoodCourt/VendorOwner"
+        "order-item": "/FoodCourt/OrderItem",
+        "vendor-owner": "/FoodCourt/VendorOwner",
+        "image-item": "/FoodCourt/ImageItem",
+        "vendor": "/FoodCourt/Vendor",
+        "categories": "/FoodCourt/Categories",
+        "rating": "/FoodCourt/RatingTable"
     }
 }

@@ -29,6 +29,10 @@ var _controller = _interopRequireDefault(require("../food-item/controller"));
 
 var _controller2 = _interopRequireDefault(require("../customer/controller"));
 
+var _dataAccessObject3 = _interopRequireDefault(require("../customer/data-access-object"));
+
+var _firebase = _interopRequireDefault(require("../firebase"));
+
 var Controller = /*#__PURE__*/function () {
   function Controller() {
     var _this = this;
@@ -583,11 +587,40 @@ var Controller = /*#__PURE__*/function () {
       if (index === -1) return false;
       if (vendorID in this.completedList === false) this.completedList[vendorID] = [];
       var orderItem = this.cookingQueue[vendorID].splice(index, 1)[0];
-      this.completedList[vendorID].push(orderItem); // Push notification here 
-      //
-      //
-      //
+      this.completedList[vendorID].push(orderItem);
 
+      _dataAccessObject2["default"].queryFirst(function (item) {
+        return item.id === orderID;
+      }).then(function (order) {
+        return order.customerID;
+      }).then(function (customerID) {
+        _dataAccessObject3["default"].queryFirst(function (customer) {
+          return customer.id == customerID;
+        }).then(function (customer) {
+          return customer.registrationTokens;
+        }).then(function (registrationTokens) {
+          registrationTokens.forEach(function (regToken) {
+            var message = {
+              notification: {
+                title: 'Vui lòng đến quầy để lấy thức ăn',
+                body: 'Nhớ mang theo hóa đơn nhé!',
+                imageUrl: 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
+              },
+              token: regToken
+            };
+
+            _firebase["default"].messaging().send(message).then(function (response) {
+              console.log('Successfully sent message:', response);
+            })["catch"](function (error) {
+              console.log('Error sending message:', error);
+            });
+          });
+        });
+      });
+
+      res.json({
+        'alo': 'wtf'
+      });
       return true;
     }
     /**

@@ -4,29 +4,26 @@ import FoodItemRouter from './food-item/router'
 import CustomerRouter from './customer/router'
 import OrderRouter from './order/router'
 import VendorOwnerRouter from './vendor-owner/router'
+import Categories from './categories'
+import ImageItemRouter from './image-item/router'
+import VendorRouter from './vendor/router'
+import RatingRouter from './rating/router'
 
 router.get('/', (req, res) => {
     res.end('hello')
 })
 
-/* food-item */
-import FoodItem from './food-item/model'
-import FoodItemDataAccessObject from './food-item/data-access-object'
-router.get('/food-item', async (req, res) => {
-    res.json(await FoodItemDataAccessObject.query())
-})
-router.get('/food-item/:id', async (req, res) => {
-    res.json(await FoodItemDataAccessObject.queryByID(req.params.id))
-})
-router.post('/food-item', (req, res) => {
-    let vendorID = req.body.vendorID
-    let name = req.body.name
-    let price = req.body.price
-    let quantity = req.body.quantity
-    let categories = req.body.categories
-    let description = req.body.description
-    let photo = req.body.photo
+FoodItemRouter(router)
+CustomerRouter(router)
+OrderRouter(router)
+VendorOwnerRouter(router)
+ImageItemRouter(router)
+VendorRouter(router)
+RatingRouter(router)
 
+Categories.Router(router)
+
+router.get('/categories', (req, res) => {
     let item = new FoodItem("", vendorID, name, price, quantity, categories, description, photo)
     let id = FoodItemDataAccessObject.create(item)
     res.json({

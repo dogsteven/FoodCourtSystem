@@ -1,5 +1,6 @@
 import FoodItem from './model'
 import FoodItemDataAccessObject from './data-access-object'
+import Categories from '../categories'
 
 export default {
     UserService: {
@@ -39,6 +40,22 @@ export default {
                 return true
             }
             return false
+        },
+
+        /**
+         * @param {string} id 
+         * @param {number} rating 
+         * @returns {Promose<number>}
+         */
+        async newRating(id, rating) {
+            let foodItem = await FoodItemDataAccessObject.queryFirst((f) => f.id === id)
+            if (foodItem === null)
+                return null
+            let n = foodItem.ratingTimes
+            foodItem.rating = (foodItem.rating * n + Number(rating)) / (n + 1)
+            foodItem.ratingTimes = n + 1
+            FoodItemDataAccessObject.modify(foodItem)
+            return foodItem.rating
         }
     },
 
@@ -63,10 +80,17 @@ export default {
          */
         async addNewFood(vendorID, name, price, quantity, categories, description, photo) {
             let foodItem = new FoodItem("", vendorID, name, price, quantity, categories, description, photo)
+            Categories.query().then((existingCategories) => {
+                categories.forEach((category) => {
+                    if (existingCategories.includes(category) === false)
+                        Categories.addNewCategories(category)
+                })
+            })
             return await FoodItemDataAccessObject.create(foodItem)
         },
 
         /**
+         * @param {string} vendorID
          * @param {string} id 
          * @param {string} newName 
          * @param {number} newPrice 
@@ -75,45 +99,55 @@ export default {
          * @param {string} newPhoto 
          * @returns {Promise<boolean>}
          */
-        async changeFoodItemInformation(id, newName, newPrice, newCategories, newDescription, newPhoto) {
+        async changeFoodItemInformation(vendorID, id, newName, newPrice, newCategories, newDescription, newPhoto) {
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                foodItem.name = newName
-                foodItem.price = newPrice
-                foodItem.categories = newCategories
-                foodItem.description = newDescription
-                foodItem.photo = newPhoto
-                FoodItemDataAccessObject.modify(foodItem)
-                return true
+                if (foodItem.vendorID === vendorID) {
+                    foodItem.name = newName
+                    foodItem.price = newPrice
+                    foodItem.categories = newCategories
+                    foodItem.description = newDescription
+                    foodItem.photo = newPhoto
+                    FoodItemDataAccessObject.modify(foodItem)
+                    return true
+                }
+                return false
             }
             return false
         },
         
         /**
+         * @param {string} vendorID
          * @param {string} id
          * @returns {Promise<boolean>} 
          */
-        async removeFood(id) {
+        async removeFood(vendorID, id) {
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
-                FoodItemDataAccessObject.remove(id)
-                return true
+                if (foodItem.vendorID === vendorID) {
+                    FoodItemDataAccessObject.remove(id) 
+                    return true
+                }
+                return false
             }
             return false
         },
 
         /**
+         * @param {string} vendorID
          * @param {string} id 
          * @param {number} amount 
          * @returns {Promise<boolean?>}
          */
-        async increaseQuantity(id, amount) {
+        async increaseQuantity(vendorID, id, amount) {
             if (typeof amount !== 'number')
                 return false
             if (amount <= 0)
                 return false
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
+                if (foodItem.vendorID !== vendorID)
+                    return false
                 FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity + amount)
                 return true
             }
@@ -134,7 +168,7 @@ export default {
             if (foodItem !== null) {
                 if (foodItem.quantity < amount)
                     return false
-                    FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity - amount)
+                FoodItemDataAccessObject.modifyByField(id, 'quantity', foodItem.quantity - amount)
                 return true
             }
             return false

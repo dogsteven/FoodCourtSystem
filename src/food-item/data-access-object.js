@@ -9,7 +9,12 @@ export default {
         let foods = {}
         let snapshot = await database.once('value')
         snapshot.forEach((child) => {
-            foods[child.key] = { ...child.val() }
+            let info = child.val()
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories ?? [], info.description, info.photo, info.rating, info.ratingTimes)
+            if (filter(food) === true) {
+                result = food
+                return true
+            }
         })
         return foods
     },
@@ -18,8 +23,16 @@ export default {
      * @param {string} id 
      * @returns {FoodItem?}
      */
-    async queryByID(id) {
-        return (await database.child(id).once('value')).val()
+    async query(filter) {
+        var result = []
+        let snapshot = await database.once('value')
+        snapshot.forEach((child) => {
+            let info = child.val()
+            let food = new FoodItem(child.key, info.vendorID, info.name, info.price, info.quantity, info.categories ?? [], info.description, info.photo, info.rating, info.ratingTimes)
+            if (filter(food) === true)
+                result.push(food)
+        })
+        return result
     },
 
     /**

@@ -51,6 +51,9 @@ function task(vendorID) {
                       vendorID = _child$val.vendorID,
                       cartItems = _child$val.cartItems;
 
+                  cartItems = cartItems.map(function (item) {
+                    return new _model["default"](item.foodID, item.quantity);
+                  });
                   var orderItem = new _model2["default"](child.key, vendorID, cartItems);
 
                   if (filter(orderItem) === true) {
@@ -93,6 +96,9 @@ function task(vendorID) {
                       vendorID = _child$val2.vendorID,
                       cartItems = _child$val2.cartItems;
 
+                  cartItems = cartItems.map(function (item) {
+                    return new _model["default"](item.foodID, item.quantity);
+                  });
                   var orderItem = new _model2["default"](child.key, vendorID, cartItems);
                   if (filter(orderItem) === true) result.push(orderItem);
                 });
@@ -120,12 +126,7 @@ function task(vendorID) {
               case 0:
                 data = {
                   id: orderItem.id,
-                  cartItems: orderItem.cartItems.map(function (item) {
-                    return {
-                      foodItemID: item.foodItemID,
-                      quantity: item.quantity
-                    };
-                  })
+                  cartItems: orderItem.cartItems
                 };
                 ref = database.push();
                 ref.set(data);
@@ -151,12 +152,7 @@ function task(vendorID) {
     modify: function modify(orderItem) {
       var data = {
         id: orderItem.id,
-        cartItems: orderItem.cartItems.map(function (item) {
-          return {
-            foodItemID: item.foodItemID,
-            quantity: item.quantity
-          };
-        })
+        cartItems: orderItem.cartItems
       };
       database.child(orderItem.id).set(data);
     },
