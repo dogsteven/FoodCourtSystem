@@ -36,7 +36,7 @@ function UserService(router) {
 function ManagerService(router) {
     router.get('/manager/unpaidorder/:vendorID', async(req, res) => {
         let vendorID = req.params.vendorID
-    res.json(await OrderAccessObject.query((item) => item.state === 'unpaid'))
+    res.json(await OrderAccessObject.query((item) => true))
     })
     router.get('/manager/order/paid/:id', (req, res) => {
         let orderID = req.params.id

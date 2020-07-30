@@ -158,7 +158,7 @@ function ManagerService(router) {
               _context5.t0 = res;
               _context5.next = 4;
               return _dataAccessObject["default"].query(function (item) {
-                return item.state === 'unpaid';
+                return true;
               });
 
             case 4:

@@ -10,7 +10,7 @@ export default class {
      * @param {string} description 
      * @param {string} photo 
      */
-    constructor(id, vendorID, name, price, quantity, categories, description, photo) {
+    constructor(id, vendorID, name, price, quantity, categories, description, photo, rating=0, ratingTimes=0) {
         this.id = id
         this.vendorID = vendorID
         this.name = name

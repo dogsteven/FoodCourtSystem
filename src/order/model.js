@@ -7,10 +7,11 @@ export default class {
      * @param {string} customerID 
      * @param {OrderItem[]} items
      */
-    constructor(id, customerID, items) {
+    constructor(id, customerID, items, state='unpaid') {
         this.id = id
         this.customerID = customerID
-        this.items = items
+        this.cartItems = items
+        this.state = state
     }
 
     async makeOrderItems() {

@@ -24,10 +24,12 @@ var _default = /*#__PURE__*/function () {
    * @param {OrderItem[]} items
    */
   function _default(id, customerID, items) {
+    var state = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'unpaid';
     (0, _classCallCheck2["default"])(this, _default);
     this.id = id;
     this.customerID = customerID;
-    this.items = items;
+    this.cartItems = items;
+    this.state = state;
   }
 
   (0, _createClass2["default"])(_default, [{
