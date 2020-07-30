@@ -103,6 +103,12 @@ export default {
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
                 if (foodItem.vendorID === vendorID) {
+                    Categories.query().then((existingCategories) => {
+                        newCategories.forEach((category) => {
+                            if (existingCategories.includes(category) === false)
+                                Categories.addNewCategories(category)
+                        })
+                    })
                     foodItem.name = newName
                     foodItem.price = newPrice
                     foodItem.categories = newCategories

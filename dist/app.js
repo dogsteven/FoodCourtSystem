@@ -23,4 +23,4 @@ app.use('/api', _router["default"]);
 
 var server = _http["default"].createServer(app);
 
-server.listen(process.env.PORT || 8000);
+server.listen(process.env.PORT || 80);

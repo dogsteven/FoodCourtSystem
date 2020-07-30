@@ -274,14 +274,20 @@ var _default = {
                 foodItem = _context7.sent;
 
                 if (!(foodItem !== null)) {
-                  _context7.next = 13;
+                  _context7.next = 14;
                   break;
                 }
 
                 if (!(foodItem.vendorID === vendorID)) {
-                  _context7.next = 12;
+                  _context7.next = 13;
                   break;
                 }
+
+                _categories["default"].query().then(function (existingCategories) {
+                  newCategories.forEach(function (category) {
+                    if (existingCategories.includes(category) === false) _categories["default"].addNewCategories(category);
+                  });
+                });
 
                 foodItem.name = newName;
                 foodItem.price = newPrice;
@@ -293,13 +299,13 @@ var _default = {
 
                 return _context7.abrupt("return", true);
 
-              case 12:
-                return _context7.abrupt("return", false);
-
               case 13:
                 return _context7.abrupt("return", false);
 
               case 14:
+                return _context7.abrupt("return", false);
+
+              case 15:
               case "end":
                 return _context7.stop();
             }
