@@ -10,12 +10,15 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _http = _interopRequireDefault(require("http"));
 
+var _expressFileupload = _interopRequireDefault(require("express-fileupload"));
+
 var app = (0, _express["default"])();
 app.use(_express["default"].json());
+app.use((0, _expressFileupload["default"])());
 app.use((0, _cors["default"])({
   origin: true
 }));
-app.use(_express["default"]["static"]('static'));
+app.use(_express["default"]["static"]('public'));
 app.use('/api', _router["default"]);
 
 var server = _http["default"].createServer(app);

@@ -45,8 +45,10 @@ var _default = {
             case 3:
               snapshot = _context.sent;
               snapshot.forEach(function (child) {
+                var _info$categories;
+
                 var info = child.val();
-                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes);
+                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, (_info$categories = info.categories) !== null && _info$categories !== void 0 ? _info$categories : [], info.description, info.photo, info.rating, info.ratingTimes);
 
                 if (filter(food) === true) {
                   result = food;
@@ -82,8 +84,10 @@ var _default = {
             case 3:
               snapshot = _context2.sent;
               snapshot.forEach(function (child) {
+                var _info$categories2;
+
                 var info = child.val();
-                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, info.categories, info.description, info.photo, info.rating, info.ratingTimes);
+                var food = new _model["default"](child.key, info.vendorID, info.name, info.price, info.quantity, (_info$categories2 = info.categories) !== null && _info$categories2 !== void 0 ? _info$categories2 : [], info.description, info.photo, info.rating, info.ratingTimes);
                 if (filter(food) === true) result.push(food);
               });
               return _context2.abrupt("return", result);

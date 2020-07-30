@@ -45,51 +45,117 @@ var _default = {
   },
 
   /**
-   * @param {string} username 
-   * @param {string} password 
-   * @param {string} vendorID 
-   * @param {string} firstname 
-   * @param {string} lastname 
-   * @param {string} email 
-   * @returns {Promise<string?>}
+   * @returns {Promise<VendorOwner[]>}
    */
-  register: function register(username, password, vendorID, firstname, lastname, email) {
+  queryByAll: function queryByAll() {
     return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-      var vendorOwner, isExist;
       return _regenerator["default"].wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              vendorOwner = new _model["default"]("", username, password, vendorID, firstname, lastname, email);
-              _context2.next = 3;
-              return _dataAccessObject["default"].queryFirst(function (vo) {
-                return vo.username === username;
+              _context2.next = 2;
+              return _dataAccessObject["default"].query(function (vo) {
+                return true;
               });
 
-            case 3:
-              _context2.t0 = _context2.sent;
-              isExist = _context2.t0 !== null;
-
-              if (!(isExist === true)) {
-                _context2.next = 7;
-                break;
-              }
-
-              return _context2.abrupt("return", null);
-
-            case 7:
-              _context2.next = 9;
-              return _dataAccessObject["default"].create(vendorOwner);
-
-            case 9:
+            case 2:
               return _context2.abrupt("return", _context2.sent);
 
-            case 10:
+            case 3:
             case "end":
               return _context2.stop();
           }
         }
       }, _callee2);
+    }))();
+  },
+
+  /**
+   * @param {string} username 
+   * @param {string} password 
+   * @param {string} firstname 
+   * @param {string} lastname 
+   * @param {string} email 
+   * @param {string} vendorID 
+   */
+  create: function create(username, password, firstname, lastname, email, vendorID) {
+    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+      var isExist, vendorOwner;
+      return _regenerator["default"].wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _dataAccessObject["default"].queryFirst(function (vo) {
+                return vo.username === username;
+              });
+
+            case 2:
+              _context3.t0 = _context3.sent;
+              isExist = _context3.t0 !== null;
+
+              if (!isExist) {
+                _context3.next = 6;
+                break;
+              }
+
+              return _context3.abrupt("return", null);
+
+            case 6:
+              vendorOwner = new _model["default"]("", username, password, vendorID, firstname, lastname, email);
+              _context3.next = 9;
+              return _dataAccessObject["default"].create(vendorOwner);
+
+            case 9:
+              return _context3.abrupt("return", _context3.sent);
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+
+  /**
+   * @param {string} id 
+   * @returns {Promise<boolean>}
+   */
+  remove: function remove(id) {
+    return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+      var isExist;
+      return _regenerator["default"].wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _dataAccessObject["default"].queryFirst(function (vo) {
+                return vo.id === id;
+              });
+
+            case 2:
+              _context4.t0 = _context4.sent;
+              isExist = _context4.t0 !== null;
+
+              if (!isExist) {
+                _context4.next = 7;
+                break;
+              }
+
+              _dataAccessObject["default"].remove(id);
+
+              return _context4.abrupt("return", true);
+
+            case 7:
+              return _context4.abrupt("return", false);
+
+            case 8:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
     }))();
   }
 };

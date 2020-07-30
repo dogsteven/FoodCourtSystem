@@ -29,13 +29,13 @@ function _default(id, vendorID, name, price, quantity, categories, description, 
   this.id = id;
   this.vendorID = vendorID;
   this.name = name;
-  this.price = price;
-  this.quantity = quantity;
+  this.price = Number(price);
+  this.quantity = Number(quantity);
   this.categories = categories;
   this.description = description;
   this.photo = photo;
-  this.rating = rating;
-  this.ratingTimes = ratingTimes;
+  this.rating = Number(rating);
+  this.ratingTimes = Number(ratingTimes);
 };
 
 exports["default"] = _default;

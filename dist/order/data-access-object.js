@@ -13,11 +13,9 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _model = _interopRequireDefault(require("./cart-item/model"));
+var _model = _interopRequireDefault(require("./model"));
 
-var _model2 = _interopRequireDefault(require("./order-item/model"));
-
-var _model3 = _interopRequireDefault(require("./model"));
+var _model2 = _interopRequireDefault(require("./cart-item/model"));
 
 var _configuration = _interopRequireDefault(require("../configuration"));
 
@@ -51,9 +49,13 @@ var _default = {
               snapshot.forEach(function (child) {
                 var _child$val = child.val(),
                     customerID = _child$val.customerID,
-                    cartItems = _child$val.cartItems;
+                    cartItems = _child$val.cartItems,
+                    state = _child$val.state;
 
-                var order = new _model3["default"](child.key, customerID, cartItems);
+                cartItems = cartItems.map(function (item) {
+                  return new _model2["default"](item.foodID, item.quantity);
+                });
+                var order = new _model["default"](child.key, customerID, cartItems, state);
 
                 if (filter(order) === true) {
                   result = order;
@@ -93,9 +95,13 @@ var _default = {
               snapshot.forEach(function (child) {
                 var _child$val2 = child.val(),
                     customerID = _child$val2.customerID,
-                    cartItems = _child$val2.cartItems;
+                    cartItems = _child$val2.cartItems,
+                    state = _child$val2.state;
 
-                var order = new _model3["default"](child.key, customerID, cartItems);
+                cartItems = cartItems.map(function (item) {
+                  return new _model2["default"](item.foodID, item.quantity);
+                });
+                var order = new _model["default"](child.key, customerID, cartItems, state);
                 if (filter(order) === true) result.push(order);
               });
               return _context2.abrupt("return", result);

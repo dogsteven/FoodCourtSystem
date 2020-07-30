@@ -1,6 +1,7 @@
 import CartItem from './cart-item/model'
 import OrderItem from './order-item/model'
 
+
 export default class {
     /**
      * @param {string} id 
@@ -15,18 +16,16 @@ export default class {
         this.state = state
     }
 
-    /**
-     * @returns {OrderItem[]}
-     */
-    makeOrderItems() {
-        let orderItems = []
-        this.cartItems.forEach((item) => {
-            let index = orderItems.findIndex((orderItem) => orderItem.vendorID === item.vendorID)
+    async makeOrderItems() {
+        var result = []
+        for (let i in this.cartItems) {
+            let vendorID = await this.cartItems[i].vendorID()
+            let index = result.findIndex((item) => item.vendorID === vendorID)
             if (index === -1)
-                orderItems.push(new OrderItem(this.id, item.vendorID, [item]))
-            else
-                orderItems[index].cartItems.push(item)
-        })
-        return orderItems
+                result.push(new OrderItem(this.id, vendorID, [this.cartItems[i]]))
+            else 
+                result[index].cartItems.push(this.cartItems[i])
+        }
+        return result
     }
 }

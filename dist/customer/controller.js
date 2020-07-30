@@ -180,6 +180,7 @@ var _default = {
     },
 
     /**
+     * @param {string} id
      * @param {string} token 
      * @returns {Promise<boolean>}
      */
@@ -221,6 +222,33 @@ var _default = {
       }))();
     }
   },
-  ManagerService: {}
+  ManagerService: {
+    /**
+     * @param {string} id 
+     * @returns {Promise<Customer?>}
+     */
+    queryByID: function queryByID(id) {
+      return (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6() {
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.next = 2;
+                return _dataAccessObject["default"].queryFirst(function (customer) {
+                  return customer.id === id;
+                });
+
+              case 2:
+                return _context6.abrupt("return", _context6.sent);
+
+              case 3:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
+    }
+  }
 };
 exports["default"] = _default;
