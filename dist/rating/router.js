@@ -13,8 +13,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _controller = _interopRequireDefault(require("./controller"));
 
-var _dataAccessObject = _interopRequireDefault(require("./data-access-object"));
-
 /** 
  * @param {import('express').Router} router 
  */

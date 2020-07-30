@@ -318,6 +318,88 @@ var Controller = /*#__PURE__*/function () {
     }()
     /**
      * @param {string} customerID 
+     * @returns {Promise<{ error: string?, body: { id: string, info: { orderItem: OrderItem, state: string }[] }[] }>}
+     */
+
+  }, {
+    key: "queryTakedOrderByCustomerID",
+    value: function () {
+      var _queryTakedOrderByCustomerID = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(customerID) {
+        var order, orderIDs, result, i, _yield$this$queryByID2, _info2;
+
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _dataAccessObject2["default"].query(function (o) {
+                  return o.customerID === customerID;
+                });
+
+              case 2:
+                order = _context3.sent;
+
+                if (!(order === null)) {
+                  _context3.next = 5;
+                  break;
+                }
+
+                return _context3.abrupt("return", {
+                  error: 'Customer with id ' + customerID + ' is not exist!',
+                  body: []
+                });
+
+              case 5:
+                orderIDs = order.map(function (o) {
+                  return o.id;
+                });
+                result = [];
+                _context3.t0 = _regenerator["default"].keys(orderIDs);
+
+              case 8:
+                if ((_context3.t1 = _context3.t0()).done) {
+                  _context3.next = 17;
+                  break;
+                }
+
+                i = _context3.t1.value;
+                _context3.next = 12;
+                return this.queryByID(orderIDs[i]);
+
+              case 12:
+                _yield$this$queryByID2 = _context3.sent;
+                _info2 = _yield$this$queryByID2.info;
+                if (_info2.findIndex(function (orderItem) {
+                  return orderItem.state === 'taked';
+                }) >= 0) result.push({
+                  id: orderIDs[i],
+                  info: _info2
+                });
+                _context3.next = 8;
+                break;
+
+              case 17:
+                return _context3.abrupt("return", {
+                  error: null,
+                  body: result
+                });
+
+              case 18:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function queryTakedOrderByCustomerID(_x3) {
+        return _queryTakedOrderByCustomerID.apply(this, arguments);
+      }
+
+      return queryTakedOrderByCustomerID;
+    }()
+    /**
+     * @param {string} customerID 
      * @param {CartItem[]} cartItems 
      * @returns {Promise<{ id: string?, error: string?, errorItems: string[] }>}
      */
@@ -325,38 +407,38 @@ var Controller = /*#__PURE__*/function () {
   }, {
     key: "makeOrder",
     value: function () {
-      var _makeOrder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(customerID, cartItems) {
+      var _makeOrder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(customerID, cartItems) {
         var isExist, errorItems, i, foodItem, isEnough, order, _i, id;
 
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 if (!(cartItems.length === 0)) {
-                  _context3.next = 2;
+                  _context4.next = 2;
                   break;
                 }
 
-                return _context3.abrupt("return", {
+                return _context4.abrupt("return", {
                   id: null,
                   error: "Empty cart list!",
                   errorItems: []
                 });
 
               case 2:
-                _context3.next = 4;
+                _context4.next = 4;
                 return _controller2["default"].ManagerService.queryByID(customerID);
 
               case 4:
-                _context3.t0 = _context3.sent;
-                isExist = _context3.t0 !== null;
+                _context4.t0 = _context4.sent;
+                isExist = _context4.t0 !== null;
 
                 if (!(isExist === false)) {
-                  _context3.next = 8;
+                  _context4.next = 8;
                   break;
                 }
 
-                return _context3.abrupt("return", {
+                return _context4.abrupt("return", {
                   id: null,
                   error: 'Customer with id ' + customerID + ' is not exist!',
                   errorItems: []
@@ -364,27 +446,27 @@ var Controller = /*#__PURE__*/function () {
 
               case 8:
                 errorItems = [];
-                _context3.t1 = _regenerator["default"].keys(cartItems);
+                _context4.t1 = _regenerator["default"].keys(cartItems);
 
               case 10:
-                if ((_context3.t2 = _context3.t1()).done) {
-                  _context3.next = 21;
+                if ((_context4.t2 = _context4.t1()).done) {
+                  _context4.next = 21;
                   break;
                 }
 
-                i = _context3.t2.value;
-                _context3.next = 14;
+                i = _context4.t2.value;
+                _context4.next = 14;
                 return _controller["default"].UserService.getFoodByID(cartItems[i].foodID);
 
               case 14:
-                foodItem = _context3.sent;
+                foodItem = _context4.sent;
 
                 if (!(foodItem === null)) {
-                  _context3.next = 17;
+                  _context4.next = 17;
                   break;
                 }
 
-                return _context3.abrupt("return", {
+                return _context4.abrupt("return", {
                   id: null,
                   error: 'Unvalid food item\'s ID',
                   errorItems: []
@@ -393,16 +475,16 @@ var Controller = /*#__PURE__*/function () {
               case 17:
                 isEnough = foodItem.quantity >= cartItems[i].quantity;
                 if (isEnough === false) errorItems.push(cartItems[i].foodID);
-                _context3.next = 10;
+                _context4.next = 10;
                 break;
 
               case 21:
                 if (!(errorItems.length > 0)) {
-                  _context3.next = 23;
+                  _context4.next = 23;
                   break;
                 }
 
-                return _context3.abrupt("return", {
+                return _context4.abrupt("return", {
                   id: null,
                   error: 'Out of stock!',
                   errorItems: errorItems
@@ -415,14 +497,14 @@ var Controller = /*#__PURE__*/function () {
                   _controller["default"].ManagerService.decreaseQuantity(cartItems[_i].foodID, cartItems[_i].quantity);
                 }
 
-                _context3.next = 27;
+                _context4.next = 27;
                 return _dataAccessObject2["default"].create(order);
 
               case 27:
-                id = _context3.sent;
+                id = _context4.sent;
                 order.id = id;
                 this.unpaidOrders.push(order);
-                return _context3.abrupt("return", {
+                return _context4.abrupt("return", {
                   id: id,
                   error: null,
                   errorItems: []
@@ -430,13 +512,13 @@ var Controller = /*#__PURE__*/function () {
 
               case 31:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
 
-      function makeOrder(_x3, _x4) {
+      function makeOrder(_x4, _x5) {
         return _makeOrder.apply(this, arguments);
       }
 
