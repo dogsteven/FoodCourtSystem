@@ -116,9 +116,9 @@ function UserService(router) {
 
 function ManagerService(router) {
   router.get('/manager/order/paid/:id', function (req, res) {
-    var id = req.params.id;
+    var orderID = req.params.id;
 
-    var status = _controller["default"].pushOrderFromUnpaidToWaitingQueue(id);
+    var status = _controller["default"].pushToWaitingQueue(orderID);
 
     res.json({
       status: status
@@ -127,22 +127,64 @@ function ManagerService(router) {
   router.get('/manager/order/cook/:vendorID', function (req, res) {
     var vendorID = req.params.vendorID;
 
-    var status = _controller["default"].popOrderFromWaitingQueueToCookingQueue(vendorID);
+    var status = _controller["default"].popFirstOrderFromWaitingQueueToCookingQueue(vendorID);
 
     res.json({
       status: status
     });
   });
-  router.get('/manager/order/complete/:vendorID/:id', function (req, res) {
-    var vendorID = req.params.vendorID;
-    var id = req.params.id;
+  router.get('/manager/order/complete/:vendorID/:id', /*#__PURE__*/function () {
+    var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res) {
+      var vendorID, orderID, status;
+      return _regenerator["default"].wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              vendorID = req.params.vendorID;
+              orderID = req.params.id;
+              status = _controller["default"].completeCooking(vendorID, orderID);
+              res.json({
+                status: status
+              });
 
-    var status = _controller["default"].popOrderFromCookingQueue(vendorID, id);
+            case 4:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
 
-    res.json({
-      status: status
-    });
-  });
+    return function (_x7, _x8) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
+  router.get('/manager/order/take/:vendorID/:id', /*#__PURE__*/function () {
+    var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
+      var vendorID, orderID, status;
+      return _regenerator["default"].wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              vendorID = req.params.vendorID;
+              orderID = req.params.id;
+              status = _controller["default"].popOrderFromCompletedList(vendorID, orderID);
+              res.json({
+                status: status
+              });
+
+            case 4:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
+
+    return function (_x9, _x10) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
 }
 /**
  * @param {import('express').Router} router 
