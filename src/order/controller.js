@@ -277,26 +277,26 @@ class Controller {
             .then((order) => order.customerID)
             .then((customerID)=> {
                 CustomerDataAccessObject.queryFirst((customer)=> customer.id == customerID)
-                .then(customer => customer.registrationTokens)
-                .then((registrationTokens) => {
-                    registrationTokens.forEach((regToken) => {
-                        var message = {
-                            notification: {
-                                title : 'Vui lòng đến quầy để lấy thức ăn',
-                                body: 'Nhớ mang theo hóa đơn nhé!',
-                                imageUrl : 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
-                            },
-                            token: regToken,
-                        }
-                        FirebaseAdmin.messaging().send(message).then((response) => {
-                                console.log('Successfully sent message:', response);
-                            })
-                            .catch((error) => {
-                                console.log('Error sending message:', error);
-                        });
-                    })
+                    .then(customer => customer.registrationTokens)
+                    .then((registrationTokens) => {
+                        registrationTokens.forEach((regToken) => {
+                            var message = {
+                                notification: {
+                                    title : 'Vui lòng đến quầy để lấy thức ăn',
+                                    body: 'Nhớ mang theo hóa đơn nhé!',
+                                    imageUrl : 'https://product.hstatic.net/1000335596/product/img_0163_8dd37ca37c8b447080b3591e540dd99c_2a902d303dac43c0aef9d212828c0b8d.jpg'
+                                },
+                                token: regToken,
+                            }
+                            FirebaseAdmin.messaging().send(message).then((response) => {
+                                    console.log('Successfully sent message:', response);
+                                })
+                                .catch((error) => {
+                                    console.log('Error sending message:', error);
+                            });
+                        })
 
-                })
+                    })
             })
         return true
     }

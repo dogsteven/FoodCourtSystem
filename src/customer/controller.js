@@ -66,9 +66,12 @@ export default {
             let customer = await CustomerDataAccessObject.queryFirst((customer) => customer.id === id)
             if (customer === null)
                 return false
-            let newTokens = customer.registrationTokens.concat([token])
-            CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
-            return true
+            if (customer.registrationTokens.includes(token) === false) {
+                let newTokens = customer.registrationTokens.concat([token])
+                CustomerDataAccessObject.modifyByField(id, 'registrationTokens', newTokens)
+                return true
+            }
+            return false
         }
     },
 

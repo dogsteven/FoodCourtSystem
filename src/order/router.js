@@ -1,5 +1,6 @@
 import OrderController from './controller'
 import CartItem from './cart-item/model'
+import OrderAccessObject from './data-access-object'
 
 /**
  * @param {import('express').Router} router 
@@ -65,6 +66,11 @@ function ManagerService(router) {
         res.json({
             status: status
         })
+    })
+
+    router.get('/manager/unpaidorder/:vendorID', async(req, res) => {
+        let vendorID = req.params.vendorID
+        res.json(await OrderAccessObject.query((item) => true))
     })
 }
 

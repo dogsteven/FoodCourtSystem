@@ -1,4 +1,5 @@
 import CustomerController from './controller'
+import CustomerDataAccessObject from './data-access-object'
 
 /**
  * @param {import('express').Router} router 
@@ -58,6 +59,7 @@ function ManagerService(router) {
     router.post('/customer/:id/newRegistrationToken/:token', async (req, res) => {
         let id = req.params.id
         let token = req.params.token
+        console.log(id, token)
         res.json({
             status: await CustomerController.UserService.addNewRegistrationToken(id, token)
         })
