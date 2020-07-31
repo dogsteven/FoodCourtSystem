@@ -79,6 +79,9 @@ export default {
          * @returns {Promise<string>}
          */
         async addNewFood(vendorID, name, price, quantity, categories, description, photo) {
+            let isExist = await FoodItemDataAccessObject.queryFirst((f) => f.name === name) !== null
+            if (isExist === true)
+                return null
             let foodItem = new FoodItem("", vendorID, name, price, quantity, categories, description, photo)
             Categories.query().then((existingCategories) => {
                 categories.forEach((category) => {
@@ -100,6 +103,10 @@ export default {
          * @returns {Promise<boolean>}
          */
         async changeFoodItemInformation(vendorID, id, newName, newPrice, newCategories, newDescription, newPhoto) {
+            let isExist = await FoodItemDataAccessObject.queryFirst((f) => f.name === newName) !== null
+            if (isExist === true) {
+                return false
+            }
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
                 if (foodItem.vendorID === vendorID) {
