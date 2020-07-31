@@ -6,10 +6,10 @@ Hệ thống này hi vọng có thể tiết kiệm tối đa thời gian đặt
 > Chúng tôi hi vọng có thể tạo ra một phần mềm thân thiện với người dùng trong việc đặt đồ ăn tại các quán ăn trong hệ thống của một Food Court  mà trong project này chúng tôi lấy bối cảnh là hệ thống bán thức ăn đang được triển khai tại Trường Đại học Bách Khoa thành phố Hồ Chí Minh cơ sở Lý Thường Kiệt.
 
 ### Project này bao gồm tổng cộng 4 phần mềm:
-* [Server](github.com/dogsteven/FoodCourtSystem)
-* [User application](github.com/dogsteven/FoodCourt)
-* [Phần mềm quản lý các các của hàng trong hệ thống](github.com/dogsteven/food-court-manager)
-* [Phần mềm quản lý tại của hàng](github.com/dogsteven/food-court-management)
+* [Server](https://github.com/dogsteven/FoodCourtSystem)
+* [User application](https://github.com/dogsteven/FoodCourt)
+* [Phần mềm quản lý các các của hàng trong hệ thống](https://github.com/dogsteven/food-court-manager)
+* [Phần mềm quản lý tại của hàng](https://github.com/dogsteven/food-court-management)
 ### Đây là phần mềm dành cho user
 1. Các bước cài đặt project này
 ```bash
