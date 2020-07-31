@@ -244,18 +244,18 @@ class Controller {
 
     /**
      * @param {string} vendorID 
-     * @returns {boolean}
+     * @returns {{ status: boolean, id: String? }}
      */
     popFirstOrderFromWaitingQueueToCookingQueue(vendorID) {
         if ((vendorID in this.waitingQueue) === false)
-            return false
+            return { status: false, id: null }
         if (this.waitingQueue[vendorID].length === 0)
-            return false
+            return { status: false, id: null }
         if ((vendorID in this.cookingQueue) === false)
             this.cookingQueue[vendorID] = []
         let orderItem = this.waitingQueue[vendorID].splice(0, 1)[0]
         this.cookingQueue[vendorID].push(orderItem)
-        return true
+        return { status: true, id: orderItem.id }
     }
 
     /**

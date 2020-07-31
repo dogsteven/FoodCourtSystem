@@ -44,10 +44,7 @@ function ManagerService(router) {
 
     router.get('/manager/order/cook/:vendorID', (req, res) => {
         let vendorID = req.params.vendorID
-        let status = OrderController.popFirstOrderFromWaitingQueueToCookingQueue(vendorID)
-        res.json({
-            status: status
-        })
+        res.json(OrderController.popFirstOrderFromWaitingQueueToCookingQueue(vendorID))
     })
 
     router.get('/manager/order/complete/:vendorID/:id', async (req, res) => {
