@@ -105,8 +105,10 @@ export default {
         async changeFoodItemInformation(vendorID, id, newName, newPrice, newCategories, newDescription, newPhoto) {
             let food = await FoodItemDataAccessObject.queryFirst((f) => f.id === id)
             let isExist = await FoodItemDataAccessObject.queryFirst((f) => f.name === newName) !== null
-            if (isExist === true && food.name === 'new-item-name')
+            if ((newName !== food.name && isExist)) {
+                console.log("error")
                 return false
+            }
             let foodItem = await FoodItemDataAccessObject.queryFirst((item) => item.id === id)
             if (foodItem !== null) {
                 if (foodItem.vendorID === vendorID) {
