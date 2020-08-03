@@ -67,9 +67,9 @@ function ManagerService(router) {
 
     router.get('/manager/order/:vendorID', (req, res) => {
         let vendorID = req.params.vendorID
-        let waitingOrders = (vendorID in OrderController.waitingQueue) ? OrderController.waitingQueue[vendorID] : null
-        let cookingOrders = (vendorID in OrderController.cookingQueue) ? OrderController.cookingQueue[vendorID] : null
-        let completedOrders = (vendorID in OrderController.completedList) ? OrderController.completedList[vendorID] : null
+        let waitingOrders = (vendorID in OrderController.waitingQueue) ? OrderController.waitingQueue[vendorID] : []
+        let cookingOrders = (vendorID in OrderController.cookingQueue) ? OrderController.cookingQueue[vendorID] : []
+        let completedOrders = (vendorID in OrderController.completedList) ? OrderController.completedList[vendorID] : []
         res.json({
             waiting: waitingOrders,
             cooking: cookingOrders,
